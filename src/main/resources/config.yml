@@ -1,3 +1,18 @@
+lore:
+  intro:
+    title: "§9§LWelcome to Cysendal."
+    text:
+      - "§3Long ago, these lands were the battlegrounds"
+      - "§3of powerful magical empires. Their terrible"
+      - "§3wars infused the land with soul energy, and"
+      - "§3within every creature in Cysendal lies reserves"
+      - "§3of that energy, ready to be harnessed."
+      - ""
+      - "§9You are here to claim that energy for yourself."
+      - "§9You may not be alone."
+      - ""
+      - "§6§LAre you ready to begin your journey?"
+      - "§8§OClick to continue."
 players:
   exampleplayer:
     sp: 40

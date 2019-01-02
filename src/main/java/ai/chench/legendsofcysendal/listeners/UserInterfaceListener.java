@@ -49,23 +49,21 @@ public class UserInterfaceListener implements Listener {
 
         plugin.saveConfig();
 
-        final Inventory selectClass = Bukkit.createInventory(null, 54, ChatColor.BLACK + "" + ChatColor.BOLD + "Welcome to Legends of Cysendal!");
+        final Inventory selectClass = Bukkit.createInventory(null, 54, ChatColor.BLACK + "" + ChatColor.BOLD + "Legends of Cysendal");
 
         // players will hover over this book to read an introduction to LoC.
         ItemStack introBook = new ItemStack(Material.BOOK, 1);
-        //introBook.addUnsafeEnchantment(Enchantment.LOYALTY, 0);
         ItemMeta itemMeta = introBook.getItemMeta();
 
-        List<String> lore = new ArrayList<String>();
-        lore.add("Welcome, hero.");
-
-        //lore.add("Click to continue.");
+        itemMeta.setDisplayName(plugin.getConfig().getString("lore.intro.title"));
+        List<String> lore = plugin.getConfig().getStringList("lore.intro.text");
 
         itemMeta.setLore(lore);
         introBook.setItemMeta(itemMeta);
-        selectClass.setItem(1, introBook);
+        selectClass.setItem(22, introBook);
 
-
+        // Bukkit crashes if we try to immediately open the inventory after a player joins.
+        // adds a delay of 5 ticks.
         class myRunnable implements Runnable {
             Player player;
             Inventory inventory;
@@ -73,15 +71,11 @@ public class UserInterfaceListener implements Listener {
                 this.player = player;
                 this.inventory = inventory;
             }
-
-
             public void run() {
                 player.openInventory(inventory);
             }
         }
-
         Bukkit.getScheduler().runTaskLater(plugin, new myRunnable(player, selectClass), 5);
-
     }
 
 }
