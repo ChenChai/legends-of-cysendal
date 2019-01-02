@@ -1,0 +1,5 @@
+players:
+  exampleplayer:
+    sp: 40
+    level: 50
+    class: 'wizard'
