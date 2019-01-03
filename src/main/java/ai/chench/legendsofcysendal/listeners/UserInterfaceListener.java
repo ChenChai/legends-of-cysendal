@@ -7,6 +7,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -38,7 +39,7 @@ public class UserInterfaceListener implements Listener {
     }
 
     // returns player to 0 sp and classless and
-    // brings up interface to choose a new class
+    // brings up an inventory interface to choose a new class
     private void resetPlayer(Player player) {
         // initialize player in config
         String uniqueId = player.getUniqueId().toString();
@@ -49,7 +50,7 @@ public class UserInterfaceListener implements Listener {
 
         plugin.saveConfig();
 
-        final Inventory selectClass = Bukkit.createInventory(null, 54, ChatColor.BLACK + "" + ChatColor.BOLD + "Legends of Cysendal");
+        final Inventory selectClass = Bukkit.createInventory(null, 54, plugin.getConfig().getString("lore.intro.inventoryName"));
 
         // players will hover over this book to read an introduction to LoC.
         ItemStack introBook = new ItemStack(Material.BOOK, 1);
@@ -77,5 +78,30 @@ public class UserInterfaceListener implements Listener {
         }
         Bukkit.getScheduler().runTaskLater(plugin, new myRunnable(player, selectClass), 5);
     }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Inventory inventory = event.getClickedInventory();
+        ItemStack itemStack = event.getCurrentItem();
+
+        // remove '§' and the following char from string since these aren't passed in inventoryName for some reason.
+        String inventoryName = inventory.getName().replaceAll("§.", "");
+        String compareName = plugin.getConfig().getString("lore.intro.inventoryName").replaceAll("§.", "");
+
+        Bukkit.broadcastMessage(inventoryName + " was clicked! Comparing to " + compareName);
+
+        // check if the clicked inventory is the same as the intro inventory
+        if (inventoryName.equals(compareName)) {
+            // check if the intro book was clicked
+
+            Bukkit.broadcastMessage(itemStack.getType() + " was clicked!");
+            if (itemStack.getType() == Material.BOOK) {
+
+                inventory.clear();
+                event.setCancelled(true);
+            }
+        }
+    }
+
 
 }

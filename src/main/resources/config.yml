@@ -1,5 +1,6 @@
 lore:
   intro:
+    inventoryName: "§0§LLegends of Cysendal"
     title: "§9§LWelcome to Cysendal."
     text:
       - "§3Long ago, these lands were the battlegrounds"
