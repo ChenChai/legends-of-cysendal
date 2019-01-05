@@ -1,5 +1,6 @@
 package ai.chench.legendsofcysendal.listeners;
 
+import ai.chench.legendsofcysendal.util.RpgManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,22 +43,20 @@ public class UserInterfaceListener implements Listener {
     // brings up an inventory interface to choose a new class
     private void resetPlayer(Player player) {
         // initialize player in config
-        String uniqueId = player.getUniqueId().toString();
-        plugin.getConfig().set("players." + uniqueId + ".sp", 0); // set number of soul points to 0
-        plugin.getConfig().set("players." + uniqueId + ".level", 1); // set level to 1
-        plugin.getConfig().set("players." + uniqueId + ".class", "none");
-        plugin.getConfig().set("players." + uniqueId + ".firstJoin", true); // this is effectively the player's first time joining
+        RpgManager rpgManager = new RpgManager(plugin);
+        rpgManager.setSoulPoints(player, 0);
+        rpgManager.updateLevel(player);
+        rpgManager.setClass(player, "none");
+        rpgManager.setFirstJoin(player, true);
 
-        plugin.saveConfig();
-
-        final Inventory selectClass = Bukkit.createInventory(null, 54, plugin.getConfig().getString("lore.intro.inventoryName"));
+        Inventory selectClass = Bukkit.createInventory(null, 54, plugin.getConfig().getString("lore.intro.inventoryName"));
 
         // players will hover over this book to read an introduction to LoC.
         ItemStack introBook = new ItemStack(Material.BOOK, 1);
         ItemMeta itemMeta = introBook.getItemMeta();
 
-        itemMeta.setDisplayName(plugin.getConfig().getString("lore.intro.title"));
-        List<String> lore = plugin.getConfig().getStringList("lore.intro.text");
+        itemMeta.setDisplayName(plugin.getConfig().getString("lore.intro.itemName"));
+        List<String> lore = plugin.getConfig().getStringList("lore.intro.itemLore");
 
         itemMeta.setLore(lore);
         introBook.setItemMeta(itemMeta);
@@ -66,8 +65,8 @@ public class UserInterfaceListener implements Listener {
         // Bukkit crashes if we try to immediately open the inventory after a player joins.
         // adds a delay of 5 ticks.
         class myRunnable implements Runnable {
-            Player player;
-            Inventory inventory;
+            private Player player;
+            private Inventory inventory;
             public myRunnable(Player player, Inventory inventory) {
                 this.player = player;
                 this.inventory = inventory;
@@ -83,25 +82,58 @@ public class UserInterfaceListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getClickedInventory();
         ItemStack itemStack = event.getCurrentItem();
+        Player player = (Player) event.getWhoClicked();
 
         // remove '§' and the following char from string since these aren't passed in inventoryName for some reason.
         String inventoryName = inventory.getName().replaceAll("§.", "");
         String compareName = plugin.getConfig().getString("lore.intro.inventoryName").replaceAll("§.", "");
 
-        Bukkit.broadcastMessage(inventoryName + " was clicked! Comparing to " + compareName);
-
         // check if the clicked inventory is the same as the intro inventory
         if (inventoryName.equals(compareName)) {
+            if (itemStack.getItemMeta() == null || itemStack.getItemMeta().getLore() == null) return;
+            String itemName = itemStack.getItemMeta().getDisplayName();
+
+            RpgManager rpgManager = new RpgManager(plugin);
+
             // check if the intro book was clicked
-
-            Bukkit.broadcastMessage(itemStack.getType() + " was clicked!");
-            if (itemStack.getType() == Material.BOOK) {
-
+            if (itemStack.getType() == Material.BOOK && itemStack.getItemMeta().getLore().equals(plugin.getConfig().getStringList("lore.intro.itemLore"))) {
                 inventory.clear();
                 event.setCancelled(true);
+                setupClassSelectInventory(inventory);
+                return;
+            } else if (itemName.equals(plugin.getConfig().getString("lore.classSelect.fighter.itemName"))){
+                Bukkit.broadcastMessage("Fighter!");
+                rpgManager.setClass(player, "fighter");
+
+            } else if (itemName.equals(plugin.getConfig().getString("lore.classSelect.mage.itemName"))){
+                Bukkit.broadcastMessage("Mage!");
+                rpgManager.setClass(player, "mage");
+            } else if (itemName.equals(plugin.getConfig().getString("lore.classSelect.ranger.itemName"))){
+                Bukkit.broadcastMessage("Ranger!");
+                rpgManager.setClass(player,"ranger");
             }
+
+            event.setCancelled(true);
         }
     }
 
+    // updates the inventory with the class selection items
+    private void setupClassSelectInventory(Inventory inventory) {
+        inventory.setItem(1, makeClassSelectItem("fighter", Material.IRON_AXE));
+        inventory.setItem(2, makeClassSelectItem("mage", Material.BLAZE_POWDER));
+        inventory.setItem(3, makeClassSelectItem("ranger", Material.BOW));
+    }
 
+    // creates an item with lore and display name found from config file.
+    private ItemStack makeClassSelectItem(String className, Material material) {
+        ItemStack itemStack = new ItemStack(material, 1);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+
+        itemMeta.setDisplayName(plugin.getConfig().getString("lore.classSelect." + className + ".itemName"));
+        List<String> lore = plugin.getConfig().getStringList("lore.classSelect." + className + ".itemLore");
+        itemMeta.setLore(lore);
+
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
 }

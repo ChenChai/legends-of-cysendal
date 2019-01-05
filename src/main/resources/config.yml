@@ -1,8 +1,9 @@
+level: [0, 83, 174, 276, 388, 512, 650, 801, 969, 1154] # how much xp is required to progress to each level
 lore:
   intro:
     inventoryName: "§0§LLegends of Cysendal"
-    title: "§9§LWelcome to Cysendal."
-    text:
+    itemName: "§9§LWelcome to Cysendal."
+    itemLore:
       - "§3Long ago, these lands were the battlegrounds"
       - "§3of powerful magical empires. Their terrible"
       - "§3wars infused the land with soul energy, and"
@@ -14,8 +15,23 @@ lore:
       - ""
       - "§6§LAre you ready to begin your journey?"
       - "§8§OClick to continue."
+  classSelect: # details what the class selection screen's items look like
+    fighter:
+      itemName: "Fighter"
+      itemLore:
+        - "§3Specializes in melee abilities."
+        - "§3High health."
+    mage:
+      itemName: "Mage"
+      itemLore:
+        - "§3Specializes in highly powered spells."
+    ranger:
+      itemName: "Ranger"
+      itemLore:
+        - "§3Specializes in bow abilities and agility."
+
 players:
   exampleplayer:
     sp: 40
-    level: 50
-    class: 'wizard'
+    level: 5
+    class: 'mage'
