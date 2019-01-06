@@ -59,7 +59,7 @@ public class RpgManager {
         boolean updated = false;
         int level = 1;
         int points = getSoulPoints(player);
-
+        
         // check if player is new player.
         if (!plugin.getConfig().isInt("player." + player.getUniqueId() + ".level")) {
             plugin.getConfig().set("player." + player.getUniqueId() + ".level", 1);

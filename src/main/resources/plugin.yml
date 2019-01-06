@@ -5,5 +5,8 @@ main: ai.chench.legendsofcysendal.Main
 
 commands:
   addsp:
-    description: adds soulpoints to an online player
+    description: adds soul points to an online player
     usage: /addsp <player> <number of soulpoints>
+  getsp:
+    description: gets the number of soul points an online player has
+    usage: /getsp <player>
