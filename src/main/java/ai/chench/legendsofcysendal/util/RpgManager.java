@@ -6,6 +6,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.List;
 
 // this class allows easier access and modification of players' soul points, level, etc.
+// PREREQ: Player objects passed in must have valid UUID.
 public class RpgManager {
     Plugin plugin;
 
@@ -15,11 +16,15 @@ public class RpgManager {
 
     // returns the amount of soul points a player has
     public int getSoulPoints(Player player) {
-        // check if the value is valid in the config file
+        // check if the value is valid in the config file; if not, then default to zero.
         if (!plugin.getConfig().isInt("players." + player.getUniqueId() + ".sp")) {
+            plugin.getConfig().set("players." + player.getUniqueId() + ".sp", 0);
+
+            /*
             plugin.getLogger().severe("Player " + player.getDisplayName() + " " +
                     "has invalid value for soul points in config.yml!");
             return -1;
+            */
         }
         return plugin.getConfig().getInt("players." + player.getUniqueId() + ".sp");
     }

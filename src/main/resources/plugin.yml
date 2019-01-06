@@ -2,3 +2,8 @@ name: Legends_Of_Cysendal
 version: 1.0
 author: ChenChai
 main: ai.chench.legendsofcysendal.Main
+
+commands:
+  addsp:
+    description: adds soulpoints to an online player
+    usage: /addsp <player> <number of soulpoints>
