@@ -54,34 +54,33 @@ public class RpgManager {
     // compares player's soul points to level thresholds, and changes player's level accordingly
     // returns true if level was updated, false otherwise.
     public boolean updateLevel(Player player) {
-        List<Integer> levelList = plugin.getConfig().getIntegerList("level");
+
 
         boolean updated = false;
-        int level = 1;
+
         int points = getSoulPoints(player);
-        
-        // check if player is new player.
-        if (!plugin.getConfig().isInt("player." + player.getUniqueId() + ".level")) {
-            plugin.getConfig().set("player." + player.getUniqueId() + ".level", 1);
+
+        // if player is new player, set their level to 1.
+        if (!plugin.getConfig().isInt("players." + player.getUniqueId() + ".level")) {
+            plugin.getConfig().set("players." + player.getUniqueId() + ".level", 1);
             updated = true;
-        } else {
-            level = plugin.getConfig().getInt("player." + player.getUniqueId() + ".level");
         }
 
-        // check if player is at correct level or at max level
-        if ((points >= levelList.get(level) && points < levelList.get(level + 1))
-                || points >= levelList.get(levelList.size() - 1)) {
-            return updated;
+        int playerLevel = plugin.getConfig().getInt("players." + player.getUniqueId() + ".level");
+        int correctLevel = 0;
+
+        // TODO: swap to binary search\
+        // finds correct level based on points, from the level list in config file.
+        List<Integer> levelList = plugin.getConfig().getIntegerList("level");
+        while (correctLevel < levelList.size() && levelList.get(correctLevel) <= points) {
+            correctLevel++;
         }
 
-        // bring level up to appropriate points.
-        // level will undershoot by 1, which is fine, since arrays start at zero.
-        updated = true;
-        while(levelList.get(level) <= points) {
-            level++;
+        if (correctLevel != playerLevel) {
+            plugin.getConfig().set("players." + player.getUniqueId() + ".level", correctLevel);
+            updated = true;
         }
-        plugin.getConfig().set("players." + player.getUniqueId() + ".level", level);
-        plugin.saveConfig();
+
         return updated;
     }
     public String getClass(Player player) {

@@ -1,4 +1,4 @@
-level: [0, 83, 174, 276, 388, 512, 650, 801, 969, 1154] # how much xp is required to progress to each level
+level: [0, 83, 174, 276, 388, 512, 650, 801, 969, 1154] # how much xp is required to progress to each level, first entry is amount needed for level 1.
 lore:
   intro:
     inventoryName: "§0§LLegends of Cysendal"

@@ -1,6 +1,7 @@
 package ai.chench.legendsofcysendal.listeners;
 
 import ai.chench.legendsofcysendal.util.RpgManager;
+import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -78,14 +79,18 @@ public class UserInterfaceListener implements Listener {
         Bukkit.getScheduler().runTaskLater(plugin, new myRunnable(player, selectClass), 5);
     }
 
+    // this listener deals with clicks in GUI inventory screens, such as the player selecting a class
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inventory = event.getClickedInventory();
+        if (inventory == null) return;
+
         ItemStack itemStack = event.getCurrentItem();
         Player player = (Player) event.getWhoClicked();
 
         // remove '§' and the following char from string since these aren't passed in inventoryName for some reason.
         String inventoryName = inventory.getName().replaceAll("§.", "");
+
         String compareName = plugin.getConfig().getString("lore.intro.inventoryName").replaceAll("§.", "");
 
         // check if the clicked inventory is the same as the intro inventory
