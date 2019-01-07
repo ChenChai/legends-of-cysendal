@@ -1,5 +1,6 @@
 package ai.chench.legendsofcysendal.listeners;
 
+import ai.chench.legendsofcysendal.util.RpgClass;
 import ai.chench.legendsofcysendal.util.RpgManager;
 import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.Bukkit;
@@ -47,7 +48,7 @@ public class UserInterfaceListener implements Listener {
         RpgManager rpgManager = new RpgManager(plugin);
         rpgManager.setSoulPoints(player, 0);
         rpgManager.updateLevel(player);
-        rpgManager.setClass(player, "none");
+        rpgManager.setClass(player, RpgClass.NONE);
         rpgManager.setFirstJoin(player, true);
 
         Inventory selectClass = Bukkit.createInventory(null, 54, plugin.getConfig().getString("lore.intro.inventoryName"));
@@ -68,7 +69,7 @@ public class UserInterfaceListener implements Listener {
         class myRunnable implements Runnable {
             private Player player;
             private Inventory inventory;
-            public myRunnable(Player player, Inventory inventory) {
+            private myRunnable(Player player, Inventory inventory) {
                 this.player = player;
                 this.inventory = inventory;
             }
@@ -106,16 +107,16 @@ public class UserInterfaceListener implements Listener {
                 event.setCancelled(true);
                 setupClassSelectInventory(inventory);
                 return;
-            } else if (itemName.equals(plugin.getConfig().getString("lore.classSelect.fighter.itemName"))){
-                Bukkit.broadcastMessage("Fighter!");
-                rpgManager.setClass(player, "fighter");
+            } else {
+                // check if the item name is equal to the item name of a class item in the config file.
+                for (RpgClass rpgClass: RpgClass.values())  {
+                    String rpgClassItemName = plugin.getConfig().getString("lore.classSelect." + rpgClass.toString() + ".itemName");
 
-            } else if (itemName.equals(plugin.getConfig().getString("lore.classSelect.mage.itemName"))){
-                Bukkit.broadcastMessage("Mage!");
-                rpgManager.setClass(player, "mage");
-            } else if (itemName.equals(plugin.getConfig().getString("lore.classSelect.ranger.itemName"))){
-                Bukkit.broadcastMessage("Ranger!");
-                rpgManager.setClass(player,"ranger");
+                    if (rpgClassItemName != null && itemName != null && rpgClassItemName.equals(itemName)) {
+                        rpgManager.setClass(player, rpgClass);
+                        player.sendMessage("You are now a " + rpgClass.toString());
+                    }
+                }
             }
 
             event.setCancelled(true);
@@ -124,18 +125,18 @@ public class UserInterfaceListener implements Listener {
 
     // updates the inventory with the class selection items
     private void setupClassSelectInventory(Inventory inventory) {
-        inventory.setItem(1, makeClassSelectItem("fighter", Material.IRON_AXE));
-        inventory.setItem(2, makeClassSelectItem("mage", Material.BLAZE_POWDER));
-        inventory.setItem(3, makeClassSelectItem("ranger", Material.BOW));
+        inventory.setItem(1, makeClassSelectItem(RpgClass.FIGHTER, Material.IRON_AXE));
+        inventory.setItem(2, makeClassSelectItem(RpgClass.MAGE, Material.BLAZE_POWDER));
+        inventory.setItem(3, makeClassSelectItem(RpgClass.RANGER, Material.BOW));
     }
 
     // creates an item with lore and display name found from config file.
-    private ItemStack makeClassSelectItem(String className, Material material) {
+    private ItemStack makeClassSelectItem(RpgClass rpgClass, Material material) {
         ItemStack itemStack = new ItemStack(material, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
 
-        itemMeta.setDisplayName(plugin.getConfig().getString("lore.classSelect." + className + ".itemName"));
-        List<String> lore = plugin.getConfig().getStringList("lore.classSelect." + className + ".itemLore");
+        itemMeta.setDisplayName(plugin.getConfig().getString("lore.classSelect." + rpgClass.toString() + ".itemName"));
+        List<String> lore = plugin.getConfig().getStringList("lore.classSelect." + rpgClass.toString() + ".itemLore");
         itemMeta.setLore(lore);
 
         itemStack.setItemMeta(itemMeta);

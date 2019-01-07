@@ -16,16 +16,16 @@ lore:
       - "§6§LAre you ready to begin your journey?"
       - "§8§OClick to continue."
   classSelect: # details what the class selection screen's items look like
-    fighter:
+    FIGHTER:
       itemName: "Fighter"
       itemLore:
         - "§3Specializes in melee abilities."
         - "§3High health."
-    mage:
+    MAGE:
       itemName: "Mage"
       itemLore:
         - "§3Specializes in highly powered spells."
-    ranger:
+    RANGER:
       itemName: "Ranger"
       itemLore:
         - "§3Specializes in bow abilities and agility."

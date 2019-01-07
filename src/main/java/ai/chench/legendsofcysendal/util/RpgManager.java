@@ -50,7 +50,6 @@ public class RpgManager {
         return plugin.getConfig().getInt("players." + player.getUniqueId() + ".level");
     }
 
-    // TODO: test if this function works.
     // compares player's soul points to level thresholds, and changes player's level accordingly
     // returns true if level was updated, false otherwise.
     public boolean updateLevel(Player player) {
@@ -83,14 +82,13 @@ public class RpgManager {
 
         return updated;
     }
-    public String getClass(Player player) {
-        return plugin.getConfig().getString("players." + player.getUniqueId() + ".class");
+    public RpgClass getClass(Player player) {
+        return RpgClass.valueOf(plugin.getConfig().getString("players." + player.getUniqueId() + ".class"));
     }
-    public void setClass(Player player, String className) {
-        plugin.getConfig().set("players." + player.getUniqueId() + ".class", className);
+    public void setClass(Player player, RpgClass rpgClass) {
+        plugin.getConfig().set("players." + player.getUniqueId() + ".class", rpgClass.toString());
         plugin.saveConfig();
     }
-
     public boolean isFirstJoin(Player player) {
         if (!plugin.getConfig().isBoolean("players." + player.getUniqueId() + ".firstJoin")) {
             plugin.getLogger().severe("Player " + player.getDisplayName() + " " +
@@ -100,10 +98,8 @@ public class RpgManager {
 
         return plugin.getConfig().getBoolean("players." + player.getUniqueId() + ".firstJoin");
     }
-
     public void setFirstJoin(Player player, boolean firstJoin) {
         plugin.getConfig().set("players." + player.getUniqueId() + ".firstJoin", firstJoin);
         plugin.saveConfig();
     }
-
 }

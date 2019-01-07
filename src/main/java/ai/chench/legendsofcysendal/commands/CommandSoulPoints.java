@@ -72,12 +72,6 @@ public class CommandSoulPoints implements CommandExecutor {
             return true;
         }
 
-
-
-
-
         return false;
-
     }
-
 }
