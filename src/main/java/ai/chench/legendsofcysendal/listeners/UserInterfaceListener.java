@@ -7,10 +7,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -51,6 +53,11 @@ public class UserInterfaceListener implements Listener {
         rpgManager.setClass(player, RpgClass.NONE);
         rpgManager.setFirstJoin(player, true);
 
+        openClassSelect(player);
+    }
+
+    // opens the introductory inventory menu to select a class.
+    private void openClassSelect(Player player) {
         Inventory selectClass = Bukkit.createInventory(null, 54, plugin.getConfig().getString("lore.intro.inventoryName"));
 
         // players will hover over this book to read an introduction to LoC.
@@ -89,13 +96,9 @@ public class UserInterfaceListener implements Listener {
         ItemStack itemStack = event.getCurrentItem();
         Player player = (Player) event.getWhoClicked();
 
-        // remove '§' and the following char from string since these aren't passed in inventoryName for some reason.
-        String inventoryName = inventory.getName().replaceAll("§.", "");
-
-        String compareName = plugin.getConfig().getString("lore.intro.inventoryName").replaceAll("§.", "");
 
         // check if the clicked inventory is the same as the intro inventory
-        if (inventoryName.equals(compareName)) {
+        if (isClassSelectScreen(inventory)) {
             if (itemStack.getItemMeta() == null || itemStack.getItemMeta().getLore() == null) return;
             String itemName = itemStack.getItemMeta().getDisplayName();
 
@@ -123,6 +126,16 @@ public class UserInterfaceListener implements Listener {
         }
     }
 
+    // make sure the player can't close the inventory screen until they choose a class.
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        RpgManager rpgManager = new RpgManager(plugin);
+        Player player = (Player) event.getPlayer();
+        if (isClassSelectScreen(event.getInventory()) && rpgManager.getClass(player) == RpgClass.NONE) {
+            openClassSelect(player);
+        }
+    }
+
     // updates the inventory with the class selection items
     private void setupClassSelectInventory(Inventory inventory) {
         inventory.setItem(1, makeClassSelectItem(RpgClass.FIGHTER, Material.IRON_AXE));
@@ -141,5 +154,17 @@ public class UserInterfaceListener implements Listener {
 
         itemStack.setItemMeta(itemMeta);
         return itemStack;
+    }
+
+    // checks if an inventory is the same as the class select inventory, based on inventory name.
+    private boolean isClassSelectScreen(Inventory inventory) {
+        // remove '§' and the following char from string since these aren't passed in inventoryName for some reason.
+        String inventoryName = inventory.getName();
+        if (inventoryName!= null)inventoryName = inventoryName.replaceAll("§.", "");
+
+        String compareName = plugin.getConfig().getString("lore.intro.inventoryName").replaceAll("§.", "");
+
+        return inventoryName != null && inventoryName.equals(compareName);
+
     }
 }
