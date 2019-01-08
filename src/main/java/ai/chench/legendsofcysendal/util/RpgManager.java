@@ -2,6 +2,7 @@ package ai.chench.legendsofcysendal.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -130,6 +131,20 @@ public class RpgManager {
         }
 
     }
+
+    // returns the amount of soul points an entity is worth, based on config file.
+    public int getEntitySoulPointValue(Entity entity) {
+        // return sp value for mob with custom name if defined in config.yml
+        if (entity.getCustomName() != null && plugin.getConfig().isInt("mobsp." + entity.getCustomName())) {
+            return plugin.getConfig().getInt("mobsp." + entity.getCustomName());
+        // otherwise, return sp value based on what type of mob the entity is
+        } else if (plugin.getConfig().isInt("mobsp." + entity.getType().toString())) {
+            return plugin.getConfig().getInt("mobsp." + entity.getType().toString());
+        }
+        // otherwise, return default value
+        return plugin.getConfig().getInt("mobsp.default");
+    }
+
 
     public int getMaxLevel() {
         return plugin.getConfig().getIntegerList("level").size();
