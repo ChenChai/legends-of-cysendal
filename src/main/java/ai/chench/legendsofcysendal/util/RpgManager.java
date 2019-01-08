@@ -25,7 +25,7 @@ public class RpgManager {
         // check if the value is valid in the config file; if not, then default to zero.
         if (!plugin.getConfig().isInt("players." + player.getUniqueId() + ".sp")) {
             plugin.getConfig().set("players." + player.getUniqueId() + ".sp", 0);
-
+            
             /*
             plugin.getLogger().severe("Player " + player.getDisplayName() + " " +
                     "has invalid value for soul points in config.yml!");
