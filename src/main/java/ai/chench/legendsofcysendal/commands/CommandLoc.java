@@ -36,12 +36,13 @@ public class CommandLoc implements CommandExecutor {
     // displays a player's progression information to them in chat.
     private void displayLocInfo(Player player) {
         RpgManager rpgManager = new RpgManager(plugin);
+        player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "LEGENDS OF CYSENDAL");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
-        player.sendMessage("Class: " + rpgManager.getClass(player).toString());
+        player.sendMessage(ChatColor.DARK_GREEN + "Class: " + ChatColor.WHITE + "" + ChatColor.BOLD + "" + rpgManager.getClass(player).toString());
         // sends additional portion of message if player is max level.
-        player.sendMessage("Level: " + rpgManager.getLevel(player) + (rpgManager.getLevel(player) >= rpgManager.getMaxLevel() ? " (MAX LEVEL)" : ""));
-        player.sendMessage("Soul Points: " + rpgManager.getSoulPoints(player) +
+        player.sendMessage(ChatColor.AQUA + "Level: " + ChatColor.WHITE + "" + ChatColor.BOLD + "" + rpgManager.getLevel(player) + (rpgManager.getLevel(player) >= rpgManager.getMaxLevel() ? " (MAX LEVEL)" : ""));
+        player.sendMessage(ChatColor.DARK_AQUA + "Soul Points: " + ChatColor.WHITE + "" + rpgManager.getSoulPoints(player) +
                 (rpgManager.getLevel(player) >= rpgManager.getMaxLevel() ? "" : "/" + rpgManager.getSoulPointsForLevel(rpgManager.getLevel(player))));
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
     }

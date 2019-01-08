@@ -31,7 +31,3 @@ lore:
         - "§3Specializes in bow abilities and agility."
 
 players:
-  exampleplayer:
-    sp: 40
-    level: 5
-    class: 'mage'

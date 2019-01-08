@@ -126,7 +126,6 @@ public class RpgManager {
         return plugin.getConfig().getIntegerList("level").size();
     }
 
-
     // THE FOLLOWING FUNCTIONS WORK CLOSELY WITH THE CLASS UserInterfaceListener TO GIVE THE PLAYER AN INTERFACE TO CHOOSE A CLASS FROM.
 
     // returns player to 0 sp and classless and calls openClassSelect
@@ -171,7 +170,5 @@ public class RpgManager {
         }
         Bukkit.getScheduler().runTaskLater(plugin, new myRunnable(player, selectClass), 5);
     }
-
-
 
 }
