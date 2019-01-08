@@ -1,5 +1,6 @@
 package ai.chench.legendsofcysendal;
 
+import ai.chench.legendsofcysendal.commands.CommandLoc;
 import ai.chench.legendsofcysendal.commands.CommandSoulPoints;
 import ai.chench.legendsofcysendal.listeners.UserInterfaceListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,7 +14,7 @@ public class Main extends JavaPlugin {
         CommandSoulPoints commandSoulPoints = new CommandSoulPoints(this);
         this.getCommand("addsp").setExecutor(commandSoulPoints);
         this.getCommand("getsp").setExecutor(commandSoulPoints);
-
+        this.getCommand("loc").setExecutor(new CommandLoc(this));
 
         getServer().getPluginManager().registerEvents(new UserInterfaceListener(this), this);
     }

@@ -102,4 +102,21 @@ public class RpgManager {
         plugin.getConfig().set("players." + player.getUniqueId() + ".firstJoin", firstJoin);
         plugin.saveConfig();
     }
+
+    // returns the minimum number of soul points needed to be a given level, or -1 if level is out of bounds.
+    public int getSoulPointsForLevel(int level) {
+        List<Integer> levelList = plugin.getConfig().getIntegerList("level");
+
+        if (level > 0 && level < levelList.size()) {
+            return levelList.get(level);
+        } else {
+            return -1;
+        }
+
+    }
+
+    public int getMaxLevel() {
+        return plugin.getConfig().getIntegerList("level").size();
+    }
+
 }

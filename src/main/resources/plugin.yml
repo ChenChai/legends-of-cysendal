@@ -10,3 +10,6 @@ commands:
   getsp:
     description: gets the number of soul points an online player has
     usage: /getsp <player>
+  loc:
+    description: various commands to manage your class in Legends of Cysendal
+    usage: /loc [ info | reset ]

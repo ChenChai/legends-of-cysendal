@@ -39,6 +39,7 @@ public class UserInterfaceListener implements Listener {
         // check if player is registered in config.yml
         // getConfig().isBoolean will return false if the path does not exist because it is the player's first time joining.
         if (!plugin.getConfig().isBoolean("players." + uniqueId + ".firstJoin") || plugin.getConfig().getBoolean("players." + uniqueId + ".firstJoin")) {
+            RpgManager rpgManager = new RpgManager(plugin);
             resetPlayer(player);
         }
     }
@@ -118,6 +119,7 @@ public class UserInterfaceListener implements Listener {
                     if (rpgClassItemName != null && itemName != null && rpgClassItemName.equals(itemName)) {
                         rpgManager.setClass(player, rpgClass);
                         player.sendMessage("You are now a " + rpgClass.toString());
+                        player.closeInventory();
                     }
                 }
             }
