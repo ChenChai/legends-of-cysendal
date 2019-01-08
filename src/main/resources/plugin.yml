@@ -13,3 +13,6 @@ commands:
   loc:
     description: various commands to manage your class in Legends of Cysendal
     usage: /loc [ info | reset ]
+  party:
+    description: various commands to manage your party
+    usage: /party [ create | invite | info | leave | disband | join ]
