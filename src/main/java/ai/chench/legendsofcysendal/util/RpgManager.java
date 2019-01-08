@@ -1,6 +1,13 @@
 package ai.chench.legendsofcysendal.util;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
@@ -118,5 +125,53 @@ public class RpgManager {
     public int getMaxLevel() {
         return plugin.getConfig().getIntegerList("level").size();
     }
+
+
+    // THE FOLLOWING FUNCTIONS WORK CLOSELY WITH THE CLASS UserInterfaceListener TO GIVE THE PLAYER AN INTERFACE TO CHOOSE A CLASS FROM.
+
+    // returns player to 0 sp and classless and calls openClassSelect
+    public void resetPlayer(Player player) {
+        // initialize player in config
+        RpgManager rpgManager = new RpgManager(plugin);
+        rpgManager.setSoulPoints(player, 0);
+        rpgManager.updateLevel(player);
+        rpgManager.setClass(player, RpgClass.NONE);
+        rpgManager.setFirstJoin(player, true);
+
+        openClassSelect(player);
+    }
+
+    // opens the introductory inventory menu to select a class.
+    public void openClassSelect(Player player) {
+        Inventory selectClass = Bukkit.createInventory(null, 54, plugin.getConfig().getString("lore.intro.inventoryName"));
+
+        // players will hover over this book to read an introduction to LoC.
+        ItemStack introBook = new ItemStack(Material.BOOK, 1);
+        ItemMeta itemMeta = introBook.getItemMeta();
+
+        itemMeta.setDisplayName(plugin.getConfig().getString("lore.intro.itemName"));
+        List<String> lore = plugin.getConfig().getStringList("lore.intro.itemLore");
+
+        itemMeta.setLore(lore);
+        introBook.setItemMeta(itemMeta);
+        selectClass.setItem(22, introBook);
+
+        // Bukkit crashes if we try to immediately open the inventory after a player joins.
+        // adds a delay of 5 ticks.
+        class myRunnable implements Runnable {
+            private Player player;
+            private Inventory inventory;
+            private myRunnable(Player player, Inventory inventory) {
+                this.player = player;
+                this.inventory = inventory;
+            }
+            public void run() {
+                player.openInventory(inventory);
+            }
+        }
+        Bukkit.getScheduler().runTaskLater(plugin, new myRunnable(player, selectClass), 5);
+    }
+
+
 
 }

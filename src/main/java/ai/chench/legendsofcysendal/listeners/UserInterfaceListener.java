@@ -40,52 +40,18 @@ public class UserInterfaceListener implements Listener {
         // getConfig().isBoolean will return false if the path does not exist because it is the player's first time joining.
         if (!plugin.getConfig().isBoolean("players." + uniqueId + ".firstJoin") || plugin.getConfig().getBoolean("players." + uniqueId + ".firstJoin")) {
             RpgManager rpgManager = new RpgManager(plugin);
-            resetPlayer(player);
+            rpgManager.resetPlayer(player);
         }
     }
 
-    // returns player to 0 sp and classless and
-    // brings up an inventory interface to choose a new class
-    private void resetPlayer(Player player) {
-        // initialize player in config
+    // make sure the player can't close the inventory screen until they choose a class.
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
         RpgManager rpgManager = new RpgManager(plugin);
-        rpgManager.setSoulPoints(player, 0);
-        rpgManager.updateLevel(player);
-        rpgManager.setClass(player, RpgClass.NONE);
-        rpgManager.setFirstJoin(player, true);
-
-        openClassSelect(player);
-    }
-
-    // opens the introductory inventory menu to select a class.
-    private void openClassSelect(Player player) {
-        Inventory selectClass = Bukkit.createInventory(null, 54, plugin.getConfig().getString("lore.intro.inventoryName"));
-
-        // players will hover over this book to read an introduction to LoC.
-        ItemStack introBook = new ItemStack(Material.BOOK, 1);
-        ItemMeta itemMeta = introBook.getItemMeta();
-
-        itemMeta.setDisplayName(plugin.getConfig().getString("lore.intro.itemName"));
-        List<String> lore = plugin.getConfig().getStringList("lore.intro.itemLore");
-
-        itemMeta.setLore(lore);
-        introBook.setItemMeta(itemMeta);
-        selectClass.setItem(22, introBook);
-
-        // Bukkit crashes if we try to immediately open the inventory after a player joins.
-        // adds a delay of 5 ticks.
-        class myRunnable implements Runnable {
-            private Player player;
-            private Inventory inventory;
-            private myRunnable(Player player, Inventory inventory) {
-                this.player = player;
-                this.inventory = inventory;
-            }
-            public void run() {
-                player.openInventory(inventory);
-            }
+        Player player = (Player) event.getPlayer();
+        if (isClassSelectScreen(event.getInventory()) && rpgManager.getClass(player) == RpgClass.NONE) {
+            rpgManager.openClassSelect(player);
         }
-        Bukkit.getScheduler().runTaskLater(plugin, new myRunnable(player, selectClass), 5);
     }
 
     // this listener deals with clicks in GUI inventory screens, such as the player selecting a class
@@ -125,16 +91,6 @@ public class UserInterfaceListener implements Listener {
             }
 
             event.setCancelled(true);
-        }
-    }
-
-    // make sure the player can't close the inventory screen until they choose a class.
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        RpgManager rpgManager = new RpgManager(plugin);
-        Player player = (Player) event.getPlayer();
-        if (isClassSelectScreen(event.getInventory()) && rpgManager.getClass(player) == RpgClass.NONE) {
-            openClassSelect(player);
         }
     }
 
