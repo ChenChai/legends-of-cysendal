@@ -13,8 +13,12 @@ import java.io.IOException;
 
 public class Main extends JavaPlugin {
     // custom yml config file to store player data
-    private File playerDataYml = new File(this.getDataFolder() + "/playerDataYml.yml"); // this file is only accessed when savePlayerData() is called.
-    public FileConfiguration playerData = YamlConfiguration.loadConfiguration(playerDataYml); // this is how other classes can access this data. It functions similarly to the default config
+    private File playerDataYml = new File(this.getDataFolder() + "/playerData.yml"); // this file is only accessed when savePlayerData() is called.
+    private FileConfiguration playerData = YamlConfiguration.loadConfiguration(playerDataYml); // this is how other classes can access this data. It functions similarly to the default config
+
+    public FileConfiguration getPlayerData() {
+        return playerData;
+    }
 
     public void savePlayerData() {
         try {
@@ -32,8 +36,7 @@ public class Main extends JavaPlugin {
         // create new yml file if one does not exist
         if (!playerDataYml.exists()) {
             getLogger().info("No player data file detected, creating new one!");
-            playerData.set("players", "hi");
-            savePlayerData();
+            saveResource("playerData.yml", false);
         } else {
             getLogger().info(playerData.getString("players"));
         }
