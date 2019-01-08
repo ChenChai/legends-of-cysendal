@@ -17,15 +17,18 @@ lore:
       - "§8§OClick to continue."
   classSelect: # details what the class selection screen's items look like
     FIGHTER:
+      displayName: "Fighter"
       itemName: "Fighter"
       itemLore:
         - "§3Specializes in melee abilities."
         - "§3High health."
     MAGE:
+      displayName: "Mage"
       itemName: "Mage"
       itemLore:
         - "§3Specializes in highly powered spells."
     RANGER:
+      displayName: "Ranger"
       itemName: "Ranger"
       itemLore:
         - "§3Specializes in bow abilities and agility."

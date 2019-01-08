@@ -1,5 +1,6 @@
 package ai.chench.legendsofcysendal.commands;
 
+import ai.chench.legendsofcysendal.util.RpgClass;
 import ai.chench.legendsofcysendal.util.RpgManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,7 +28,15 @@ public class CommandLoc implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("info")) {
             displayLocInfo(player);
         } else if (args[0].equalsIgnoreCase("reset")) {
-            // TODO: Reset player
+            RpgManager rpgManager = new RpgManager(plugin);
+
+            // Double check that the player wants to reset by typing confirm
+            if (rpgManager.getRpgClass(player) == RpgClass.NONE || args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
+                rpgManager.resetPlayer(player);
+            } else {
+                player.sendMessage(ChatColor.DARK_RED + "" + ChatColor.BOLD + "ARE YOU SURE YOU WANT TO RESET YOUR CLASS, LOSING ALL SOUL POINTS AND LEVELS?");
+                player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "TYPE '/loc reset confirm' TO RESET.");
+            }
         }
 
         return true;
@@ -39,7 +48,7 @@ public class CommandLoc implements CommandExecutor {
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "LEGENDS OF CYSENDAL");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
-        player.sendMessage(ChatColor.DARK_GREEN + "Class: " + ChatColor.WHITE + "" + ChatColor.BOLD + "" + rpgManager.getClass(player).toString());
+        player.sendMessage(ChatColor.DARK_GREEN + "Class: " + ChatColor.WHITE + "" + ChatColor.BOLD + "" + rpgManager.getRpgClass(player).getDisplayName(plugin));
         // sends additional portion of message if player is max level.
         player.sendMessage(ChatColor.AQUA + "Level: " + ChatColor.WHITE + "" + ChatColor.BOLD + "" + rpgManager.getLevel(player) + (rpgManager.getLevel(player) >= rpgManager.getMaxLevel() ? " (MAX LEVEL)" : ""));
         player.sendMessage(ChatColor.DARK_AQUA + "Soul Points: " + ChatColor.WHITE + "" + rpgManager.getSoulPoints(player) +

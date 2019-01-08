@@ -2,12 +2,8 @@ package ai.chench.legendsofcysendal.listeners;
 
 import ai.chench.legendsofcysendal.util.RpgClass;
 import ai.chench.legendsofcysendal.util.RpgManager;
-import org.apache.commons.lang.ObjectUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserInterfaceListener implements Listener {
@@ -44,13 +39,14 @@ public class UserInterfaceListener implements Listener {
         }
     }
 
-    // make sure the player can't close the inventory screen until they choose a class.
+    // make warn the player if they close the inventory screen before they choose a class.
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         RpgManager rpgManager = new RpgManager(plugin);
         Player player = (Player) event.getPlayer();
-        if (isClassSelectScreen(event.getInventory()) && rpgManager.getClass(player) == RpgClass.NONE) {
-            rpgManager.openClassSelect(player);
+        if (isClassSelectScreen(event.getInventory()) && rpgManager.getRpgClass(player) == RpgClass.NONE) {
+            player.sendMessage(ChatColor.YELLOW + "You haven't chosen a class! Type /loc reset to choose a class. " +
+                    "Until you choose a class, you will not be able to gain soul points or learn spells!");
         }
     }
 
@@ -83,7 +79,7 @@ public class UserInterfaceListener implements Listener {
                     String rpgClassItemName = plugin.getConfig().getString("lore.classSelect." + rpgClass.toString() + ".itemName");
 
                     if (rpgClassItemName != null && itemName != null && rpgClassItemName.equals(itemName)) {
-                        rpgManager.setClass(player, rpgClass);
+                        rpgManager.setRpgClass(player, rpgClass);
                         player.sendMessage("You are now a " + rpgClass.toString());
                         player.closeInventory();
                     }

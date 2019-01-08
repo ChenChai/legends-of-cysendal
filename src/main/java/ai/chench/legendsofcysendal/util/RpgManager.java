@@ -3,8 +3,6 @@ package ai.chench.legendsofcysendal.util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -89,10 +87,21 @@ public class RpgManager {
 
         return updated;
     }
-    public RpgClass getClass(Player player) {
-        return RpgClass.valueOf(plugin.getConfig().getString("players." + player.getUniqueId() + ".class"));
+    public RpgClass getRpgClass(Player player) {
+
+        if (!plugin.getConfig().isString("players." + player.getUniqueId() + ".class")){
+            setRpgClass(player, RpgClass.NONE);
+            return RpgClass.NONE;
+        }
+
+        String className = plugin.getConfig().getString("players." + player.getUniqueId() + ".class");
+        for (RpgClass rpgClass : RpgClass.values()) {
+            if (rpgClass.toString().equals(className)) return rpgClass;
+        }
+
+        return RpgClass.NONE;
     }
-    public void setClass(Player player, RpgClass rpgClass) {
+    public void setRpgClass(Player player, RpgClass rpgClass) {
         plugin.getConfig().set("players." + player.getUniqueId() + ".class", rpgClass.toString());
         plugin.saveConfig();
     }
@@ -134,7 +143,7 @@ public class RpgManager {
         RpgManager rpgManager = new RpgManager(plugin);
         rpgManager.setSoulPoints(player, 0);
         rpgManager.updateLevel(player);
-        rpgManager.setClass(player, RpgClass.NONE);
+        rpgManager.setRpgClass(player, RpgClass.NONE);
         rpgManager.setFirstJoin(player, true);
 
         openClassSelect(player);
