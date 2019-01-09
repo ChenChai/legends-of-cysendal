@@ -46,9 +46,14 @@ public class CommandParty implements CommandExecutor {
         }
 
         if (args[0].equalsIgnoreCase("create")) {
-            Party newParty = new Party(player, plugin); // create a new party with the player as its leader
-            newParty.setPartyLeader(player);
-            player.sendMessage("Party created!");
+            if (party.getPartyLeader() != null) {
+                player.sendMessage("You are already in a party. Use '/party leave' or '/party disband' first!");
+            } else {
+                Party newParty = new Party(player, plugin); // create a new party with the player as its leader
+                newParty.setPartyLeader(player);
+                player.sendMessage("Party created!");
+            }
+            return true;
         }
 
         if (args[0].equalsIgnoreCase("disband")) {
@@ -59,10 +64,8 @@ public class CommandParty implements CommandExecutor {
             } else {
                 player.sendMessage(ChatColor.RED + "Only the party leader can disband parties. Use '/party leave' to leave the party.");
             }
-
-
+            return true;
         }
-
-        return true;
+        return false;
     }
 }

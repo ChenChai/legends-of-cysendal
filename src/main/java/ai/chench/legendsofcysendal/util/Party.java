@@ -37,8 +37,8 @@ public class Party {
     public void setPartyLeader(Player leader) {
         List<Player> playerList = getPartyPlayers();
 
-        partyLeader = player;
-        changeToThisParty(player);
+        partyLeader = leader;
+        changeToThisParty(leader);
         for (Player follower : playerList) {
             changeToThisParty(follower);
         }
