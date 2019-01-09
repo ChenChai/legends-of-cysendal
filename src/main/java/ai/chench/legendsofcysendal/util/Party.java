@@ -20,7 +20,8 @@ public class Party {
     // constructs an object representing the party the player is in.
     public Party(Player player, Plugin plugin) {
         this.plugin = plugin;
-        if (plugin.getConfig().isString("players." + player.getUniqueId().toString() + ".partyLeader")) {
+
+        if (player != null && plugin.getConfig().isString("players." + player.getUniqueId().toString() + ".partyLeader")) {
             this.partyLeader = (Player) Bukkit.getOfflinePlayer(UUID.fromString(plugin.getConfig().getString("players." + player.getUniqueId().toString() + ".partyLeader")));
         } else {
             this.partyLeader = null;
@@ -33,12 +34,15 @@ public class Party {
 
     // updates the leader of the party, changing each player's partyLeader config entry as well.
     // also
-    public void setPartyLeader(Player player) {
+    public void setPartyLeader(Player leader) {
+        List<Player> playerList = getPartyPlayers();
+
         partyLeader = player;
         changeToThisParty(player);
-        for (Player follower : getPartyPlayers()) {
+        for (Player follower : playerList) {
             changeToThisParty(follower);
         }
+
     }
 
     // changes a player's party to the current one.
@@ -48,12 +52,15 @@ public class Party {
         if (oldParty.partyLeader != null) {
             List<Player> oldPartyList = oldParty.getPartyPlayers();
             oldPartyList.remove(player);
+            oldParty.setPartyPlayers(oldPartyList);
         }
 
-        // change player's partyLeader config to say they are in the new party
-        plugin.getConfig().set("players." + player.getUniqueId().toString() + ".partyLeader", partyLeader.getUniqueId().toString());
-        plugin.saveConfig();
+        if (player != null) {
+            // change player's partyLeader config to say they are in the new party
+            plugin.getConfig().set("players." + player.getUniqueId().toString() + ".partyLeader", partyLeader == null ? null : partyLeader.getUniqueId().toString());
+            plugin.saveConfig();
 
+        }
         // update the new party's list to
         List<Player> playerList = getPartyPlayers();
         if (!playerList.contains(player)) { playerList.add(player); }
@@ -66,7 +73,7 @@ public class Party {
         List<Player> playerList = new ArrayList<Player>();
 
         List<String> partyUids = new ArrayList<String>();
-        if (plugin.getConfig().isList("players." + partyLeader.getUniqueId() + ".partyList")) {
+        if (partyLeader != null && plugin.getConfig().isList("players." + partyLeader.getUniqueId() + ".partyList")) {
             partyUids = plugin.getConfig().getStringList("players." + partyLeader.getUniqueId() + ".partyList");
         }
 
@@ -80,18 +87,22 @@ public class Party {
     public void setPartyPlayers(List<Player> playerList) {
         List<String> partyUids = new ArrayList<String>();
         for (Player p : playerList) {
-            partyUids.add(p.getUniqueId().toString());
+            if (p != null && p.getUniqueId() != null) {
+                partyUids.add(p.getUniqueId().toString());
+                plugin.getConfig().set("players." + p.getUniqueId().toString() + ".partyLeader", (partyLeader == null ? null : partyLeader.getUniqueId().toString()));
+            }
+
+
         }
 
-
-        if (partyLeader.getUniqueId() != null) {
+        if (partyLeader != null && partyLeader.getUniqueId() != null) {
             plugin.getConfig().set("players." + partyLeader.getUniqueId().toString() + ".partyList", partyUids);
         }
         plugin.saveConfig();
     }
 
     public void disband() {
+        setPartyLeader(null); //TODO: fix this
         setPartyPlayers(new ArrayList<Player>());
-        setPartyLeader(null);
     }
 }
