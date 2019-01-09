@@ -60,6 +60,8 @@ public class UserInterfaceListener implements Listener {
         Player player = (Player) event.getWhoClicked();
 
 
+
+
         // check if the clicked inventory is the same as the intro inventory
         if (isClassSelectScreen(inventory)) {
             if (itemStack.getItemMeta() == null || itemStack.getItemMeta().getLore() == null) return;
@@ -82,6 +84,7 @@ public class UserInterfaceListener implements Listener {
                         rpgManager.setRpgClass(player, rpgClass);
                         player.sendMessage("You are now a " + rpgClass.toString());
                         player.closeInventory();
+                        rpgManager.updateLevelAndSpells(player);
                     }
                 }
             }

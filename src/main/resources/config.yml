@@ -1,13 +1,24 @@
 level: [0, 83, 174, 276, 388, 512, 650, 801, 969, 1154] # how much xp is required to progress to each level, first entry is amount needed for level 1.
 
+classes:
+  FIGHTER:
+    spells: []
+  MAGE:
+    spells: ["LIGHTNING_BOLT"]
+  RANGER:
+    spells: ["FLEET_OF_FOOT", "LIGHTNING_BOLT"]
+
+
 spells:
   LIGHTNING_BOLT:
+    level: 2
     displayName: "Lightning Bolt"
     lore: "A savage bolt of lightning streaks down from the sky where you are looking."
     costItemNum: 100
     costItemType: "DIAMOND"
     range: 50
   FLEET_OF_FOOT:
+    level: 1
     displayName: "Fleet of Foot"
     lore: "You draw upon the powers of the wild, gaining a burst of speed."
     costItemNum: 0
@@ -16,10 +27,11 @@ spells:
     amplifier: 4
 
 errors:
-  spell:
+  spells:
     outOfRange: "The target is out of range."
-
-
+    notKnown: "You do not know this spell."
+    levelTooLow: "Your level is too low to cast this spell."
+    wrongClass: "You are not the correct class to cast this spell."
 
 lore:
   intro:

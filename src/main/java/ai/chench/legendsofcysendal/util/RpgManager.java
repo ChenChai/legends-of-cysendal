@@ -1,7 +1,8 @@
 package ai.chench.legendsofcysendal.util;
 
-import ai.chench.legendsofcysendal.Main;
+import ai.chench.legendsofcysendal.Spell;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -58,9 +59,8 @@ public class RpgManager {
 
     // compares player's soul points to level thresholds, and changes player's level accordingly
     // returns true if level was updated, false otherwise.
-    public boolean updateLevel(Player player) {
-
-
+    // also updates spells known
+    public boolean updateLevelAndSpells(Player player) {
         boolean updated = false;
 
         int points = getSoulPoints(player);
@@ -83,7 +83,18 @@ public class RpgManager {
 
         if (correctLevel != playerLevel) {
             plugin.getConfig().set("players." + player.getUniqueId() + ".level", correctLevel);
+            plugin.saveConfig();
             updated = true;
+        }
+
+        // update player spells
+        SpellManager spellManager = new SpellManager(player, plugin);
+        spellManager.removeAllSpells(player);
+        for (Spell spell : spellManager.getClassSpells(getRpgClass(player))) {
+            if (correctLevel >= spellManager.getSpellLevel(spell) && !spellManager.getKnownSpells(player).contains(spell)){
+                spellManager.teachSpell(player, spell);
+                player.sendMessage(ChatColor.GOLD + "You learned " + spellManager.getDisplayName(spell) + "!");
+            }
         }
 
         return updated;
@@ -143,7 +154,7 @@ public class RpgManager {
         // initialize player in config
         RpgManager rpgManager = new RpgManager(plugin);
         rpgManager.setSoulPoints(player, 0);
-        rpgManager.updateLevel(player);
+        rpgManager.updateLevelAndSpells(player);
         rpgManager.setRpgClass(player, RpgClass.NONE);
         rpgManager.setFirstJoin(player, true);
 

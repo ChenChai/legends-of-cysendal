@@ -8,6 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.RayTraceResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SpellManager {
     Player player;
     Plugin plugin;
@@ -19,6 +22,18 @@ public class SpellManager {
 
     // attempts to cast a spell, trying to consume items and make the spell's effect.
     public boolean castSpell(Spell spell){
+        RpgManager rpgManager = new RpgManager(plugin);
+        if (!isClassSpell(spell, rpgManager.getRpgClass(player))) {
+            player.sendMessage(ChatColor.YELLOW + plugin.getConfig().getString("errors.spells.wrongClass"));
+        }
+        if (rpgManager.getLevel(player) < getSpellLevel(spell)) {
+            player.sendMessage(ChatColor.YELLOW + plugin.getConfig().getString("errors.spells.levelTooLow"));
+            return false;
+        }
+        if (!getKnownSpells(player).contains(spell)) {
+            player.sendMessage(ChatColor.YELLOW + plugin.getConfig().getString("errors.spells.notKnown"));
+            return false;
+        }
 
         if (!consumeCost(player, spell)) {
             return false;
@@ -55,4 +70,55 @@ public class SpellManager {
     public String getDisplayName(Spell spell) {
         return plugin.getConfig().getString("spells." + spell.toString() + ".displayName");
     }
+    public int getSpellLevel(Spell spell) {
+        return plugin.getConfig().getInt("spells." + spell.toString() + ".level");
+    }
+
+    public void teachSpell(Player player, Spell spell) {
+        List<String> knownSpells = new ArrayList<String>();
+        if (plugin.getConfig().isList("players." + player.getUniqueId() + ".spellsKnown")) {
+            knownSpells = plugin.getConfig().getStringList("players." + player.getUniqueId() + ".spellsKnown");
+        }
+        knownSpells.add(spell.toString());
+        plugin.getConfig().set("players." + player.getUniqueId() + ".spellsKnown", knownSpells);
+        plugin.saveConfig();
+    }
+    // removes all the spells a player knows
+    public void removeAllSpells(Player player) {
+        plugin.getConfig().set("players." + player.getUniqueId() + ".spellsKnown", new ArrayList<Spell>());
+    }
+
+    // does a player know this spell?
+    public boolean isKnownSpell(Player player, Spell spell) {
+        for (Spell knownSpell : getKnownSpells(player)) {
+            if (spell.equals(knownSpell)) { return true; }
+        }
+        return false;
+    }
+
+    public boolean isClassSpell(Spell spell, RpgClass rpgClass) {
+        return plugin.getConfig().getStringList("classes." + rpgClass.toString() + ".spells").contains(spell.toString());
+    }
+
+    public List<Spell> getClassSpells(RpgClass rpgClass) {
+        List<Spell> classSpells = new ArrayList<Spell>();
+        for (String spellName : plugin.getConfig().getStringList("classes." + rpgClass.toString() + ".spells")) {
+            classSpells.add(Spell.valueOf(spellName));
+        }
+        return classSpells;
+    }
+
+    // returns a list of the spells a player knows.
+    public List<Spell> getKnownSpells(Player player) {
+        List<Spell> knownSpells = new ArrayList<Spell>();
+
+        if (plugin.getConfig().isList("players." + player.getUniqueId() + ".spellsKnown")) {
+
+            for (String spellName : plugin.getConfig().getStringList("players." + player.getUniqueId() + ".spellsKnown")) {
+                knownSpells.add(Spell.valueOf(spellName));
+            }
+        }
+        return knownSpells;
+    }
+
 }

@@ -1,12 +1,15 @@
 package ai.chench.legendsofcysendal.commands;
 
+import ai.chench.legendsofcysendal.Spell;
 import ai.chench.legendsofcysendal.util.RpgClass;
 import ai.chench.legendsofcysendal.util.RpgManager;
+import ai.chench.legendsofcysendal.util.SpellManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
 public class CommandLoc implements CommandExecutor {
@@ -38,6 +41,7 @@ public class CommandLoc implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "TYPE '/loc reset confirm' TO RESET.");
             }
         }
+
 
         return true;
     }

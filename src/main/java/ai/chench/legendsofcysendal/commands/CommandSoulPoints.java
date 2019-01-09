@@ -1,7 +1,6 @@
 package ai.chench.legendsofcysendal.commands;
 
 import ai.chench.legendsofcysendal.util.RpgManager;
-import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -66,7 +65,7 @@ public class CommandSoulPoints implements CommandExecutor {
             rpgManager.addSoulPoints(player, points);
 
             sender.sendMessage("Added " + points + " soul points to " + playerName + " for a total of " + rpgManager.getSoulPoints(player));
-            if (rpgManager.updateLevel(player)) { // check if the player has levelled up due to the added points.
+            if (rpgManager.updateLevelAndSpells(player)) { // check if the player has levelled up due to the added points.
                 sender.sendMessage(player.getDisplayName() + " has levelled up to level " + rpgManager.getLevel(player));
             }
             return true;
