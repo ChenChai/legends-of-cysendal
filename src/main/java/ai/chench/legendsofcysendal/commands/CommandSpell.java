@@ -50,10 +50,11 @@ public class CommandSpell implements CommandExecutor {
             if (spellManager.isKnownSpell(player, spell)){
                 player.sendMessage(ChatColor.DARK_AQUA + spellManager.getDisplayName(spell) + "   [" + spell.toString() + "]");
                 ItemStack cost = spellManager.getCost(spell);
-                player.sendMessage(ChatColor.BLUE + "Cost: " + cost.getAmount() + " " + cost.getType());
+                player.sendMessage(ChatColor.BLUE + "   Cost: " + cost.getAmount() + " " + cost.getType());
             } else {
-                player.sendMessage(ChatColor.DARK_RED + "   " +  spellManager.getDisplayName(spell) + " (Unlocked level " + spellManager.getSpellLevel(spell) + ")" );
+                player.sendMessage(ChatColor.DARK_RED +  spellManager.getDisplayName(spell) + " (Unlocked level " + spellManager.getSpellLevel(spell) + ")" );
             }
+            player.sendMessage("");
         }
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         return true;

@@ -89,13 +89,13 @@ public class RpgManager {
 
         // update player spells
         SpellManager spellManager = new SpellManager(player, plugin);
-        spellManager.removeAllSpells(player);
         for (Spell spell : spellManager.getClassSpells(getRpgClass(player))) {
             if (correctLevel >= spellManager.getSpellLevel(spell) && !spellManager.getKnownSpells(player).contains(spell)){
                 spellManager.teachSpell(player, spell);
                 player.sendMessage(ChatColor.GOLD + "You learned " + spellManager.getDisplayName(spell) + "!");
             }
         }
+
 
         return updated;
     }
