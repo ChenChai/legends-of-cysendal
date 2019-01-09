@@ -1,16 +1,10 @@
 package ai.chench.legendsofcysendal;
 
 import ai.chench.legendsofcysendal.commands.CommandLoc;
-import ai.chench.legendsofcysendal.commands.CommandParty;
 import ai.chench.legendsofcysendal.commands.CommandSoulPoints;
 import ai.chench.legendsofcysendal.listeners.KillListener;
 import ai.chench.legendsofcysendal.listeners.UserInterfaceListener;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.io.IOException;
 
 public class Main extends JavaPlugin {
 

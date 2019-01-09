@@ -15,4 +15,4 @@ commands:
     usage: /loc [ info | reset ]
   party:
     description: various commands to manage your party
-    usage: /party [ create | invite | info | leave | disband | join ]
+    usage: /party [ create | invite | info | leave | disband | join ] <player>
