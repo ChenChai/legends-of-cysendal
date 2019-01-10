@@ -33,6 +33,69 @@ errors:
     levelTooLow: "Your level is too low to cast this spell."
     wrongClass: "You are not the correct class to cast this spell."
 
+mobsp: # how many soul points killing a monster gives
+  default: 1337 # for entities with custom names not in this list
+  "my Custom Mob": 4
+  BAT: 1
+  BLAZE: 2
+  CAVE_SPIDER: 3
+  CHICKEN: 5
+  COD: 1
+  COW: 1
+  CREEPER: 1
+  DOLPHIN: 1
+  DONKEY: 1
+  DROWNED: 1
+  ELDER_GUARDIAN: 100
+  ENDER_DRAGON: 244
+  ENDERMAN: 4
+  ENDERMITE: 24
+  EVOKER: 34
+  GHAST: 23
+  GIANT: 24
+  GUARDIAN: 35
+  HORSE: 53
+  HUSK: 35
+  ILLUSIONER: 35
+  IRON_GOLEM: 356
+  LLAMA: 35
+  MAGMA_CUBE: 35
+  MULE: 1
+  MUSHROOM_COW: 35
+  OCELOT: 535
+  PARROT: 35
+  PHANTOM: 35
+  PIG: 353
+  PIG_ZOMBIE: 353
+  POLAR_BEAR: 353
+  PUFFERFISH: 353
+  RABBIT: 1
+  SALMON: 1
+  SHEEP: 1
+  SHULKER: 1
+  SHULKER_BULLET: 0
+  SILVERFISH: 1
+  SKELETON: 14
+  SKELETON_HORSE: 4
+  SLIME: 2
+  SNOWMAN: 35
+  SPIDER: 3
+  SQUID: 1
+  STRAY: 25 # What is this?
+  TROPICAL_FISH: 1
+  TURTLE: 1
+  VEX: 2
+  VILLAGER: 1
+  VINDICATOR: 35
+  WITCH: 24
+  WITHER: 245
+  WITHER_SKELETON: 24
+  WOLF: 24
+  ZOMBIE: 24
+  ZOMBIE_HORSE: 5
+  ZOMBIE_VILLAGER: 24
+
+
 lore:
   intro:
     inventoryName: "§0§LLegends of Cysendal"

@@ -1,6 +1,8 @@
 package ai.chench.legendsofcysendal.listeners;
 
+import ai.chench.legendsofcysendal.util.RpgManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
@@ -57,6 +59,15 @@ public class KillListener implements Listener {
                     player.sendMessage("You did " +
                             String.format("%.1f" ,entity.getMetadata(player.getUniqueId().toString() + "damageContribution").get(0).asDouble())
                             + " damage to " + entity.getName());
+                    RpgManager rpgManager = new RpgManager(plugin);
+                    int points = rpgManager.getEntitySoulPointValue(entity);
+                    rpgManager.addSoulPoints(player, points);
+
+                    // display message telling player how many points they gained
+                    player.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "+" + points + ChatColor.RESET + "" + ChatColor.DARK_GRAY + " Soul Points ["
+                            + (entity.getCustomName() == null ? entity.getName() : entity.getCustomName()) // display custom name if it exists; normal name otherwise
+                            + "]");
+                    rpgManager.updateLevelAndSpells(player);
                 }
             }
         }

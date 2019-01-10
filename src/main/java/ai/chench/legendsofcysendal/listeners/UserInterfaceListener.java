@@ -95,9 +95,9 @@ public class UserInterfaceListener implements Listener {
 
     // updates the inventory with the class selection items
     private void setupClassSelectInventory(Inventory inventory) {
-        inventory.setItem(1, makeClassSelectItem(RpgClass.FIGHTER, Material.IRON_AXE));
-        inventory.setItem(2, makeClassSelectItem(RpgClass.MAGE, Material.BLAZE_POWDER));
-        inventory.setItem(3, makeClassSelectItem(RpgClass.RANGER, Material.BOW));
+        inventory.setItem(11, makeClassSelectItem(RpgClass.FIGHTER, Material.IRON_AXE));
+        inventory.setItem(15, makeClassSelectItem(RpgClass.MAGE, Material.BLAZE_POWDER));
+        inventory.setItem(40, makeClassSelectItem(RpgClass.RANGER, Material.BOW));
     }
 
     // creates an item with lore and display name found from config file.
