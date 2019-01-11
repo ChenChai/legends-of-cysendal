@@ -26,12 +26,17 @@ spells:
     duration: 2000
     amplifier: 4
 
+messages:
+  learnedSpell: "§6You learned a new spell, %s! Type '/spell' to check it out!"
+  levelUp: "§6§LYou have levelled up to level %d!"
+
 errors:
   spells:
     outOfRange: "The target is out of range."
     notKnown: "You do not know this spell."
     levelTooLow: "Your level is too low to cast this spell."
     wrongClass: "You are not the correct class to cast this spell."
+    classNotChosen: "§EYou haven't chosen a class! Type /loc reset to choose a class. Until you choose a class, you will not be able to gain soul points or learn spells!" # player exited the class selection screen
 
 mobsp: # how many soul points killing a monster gives
   default: 1337 # for entities with custom names not in this list

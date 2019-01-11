@@ -48,13 +48,13 @@ public class CommandSpell implements CommandExecutor {
 
         for (Spell spell : spellManager.getClassSpells(rpgManager.getRpgClass(player))){
             if (spellManager.isKnownSpell(player, spell)){
-                player.sendMessage(ChatColor.DARK_AQUA + spellManager.getDisplayName(spell) + "   [" + spell.toString() + "]");
+                player.sendMessage(ChatColor.DARK_AQUA + spell.getDisplayName(plugin) + "   [" + spell.toString() + "]");
                 ItemStack cost = spellManager.getCost(spell);
                 player.sendMessage(ChatColor.BLUE + "   Cost: " + cost.getAmount() + " " + cost.getType());
             } else {
-                player.sendMessage(ChatColor.DARK_RED +  spellManager.getDisplayName(spell) + " (Unlocked level " + spellManager.getSpellLevel(spell) + ")" );
+                player.sendMessage(ChatColor.DARK_RED +  spell.getDisplayName(plugin) + " (Unlocked level " + spell.getLevel(plugin) + ")" );
             }
-            player.sendMessage("");
+            player.sendMessage(" ");
         }
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         return true;

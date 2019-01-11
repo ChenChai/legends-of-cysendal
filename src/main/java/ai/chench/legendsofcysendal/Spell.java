@@ -25,5 +25,15 @@ public enum Spell {
         }
     };
 
+
     public abstract boolean makeEffect(Player player, Plugin plugin);
+
+    // returns display name of a spell from the configuration file.
+    public String getDisplayName(Plugin plugin) {
+        return plugin.getConfig().getString("spells." + this.toString() + ".displayName");
+    }
+
+    public int getLevel(Plugin plugin) {
+        return plugin.getConfig().getInt("spells." + this.toString() + ".level");
+    }
 }

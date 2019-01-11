@@ -2,7 +2,6 @@ package ai.chench.legendsofcysendal.util;
 
 import ai.chench.legendsofcysendal.Spell;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -59,9 +58,9 @@ public class RpgManager {
     }
 
     // compares player's soul points to level thresholds, and changes player's level accordingly
-    // returns true if level was updated, false otherwise.
-    // also updates spells known
-    public boolean updateLevelAndSpells(Player player) {
+    // returns true if level was updated, false otherwise. Also sends player a message if their level changed,
+    // telling them they levelled up and the spells that are new to that level.
+    public boolean updateLevel(Player player) {
         boolean updated = false;
 
         int points = getSoulPoints(player);
@@ -75,7 +74,7 @@ public class RpgManager {
         int playerLevel = plugin.getConfig().getInt("players." + player.getUniqueId() + ".level");
         int correctLevel = 0;
 
-        // TODO: swap to binary search\
+        // TODO: swap to binary search
         // finds correct level based on points, from the level list in config file.
         List<Integer> levelList = plugin.getConfig().getIntegerList("level");
         while (correctLevel < levelList.size() && levelList.get(correctLevel) <= points) {
@@ -88,15 +87,15 @@ public class RpgManager {
             updated = true;
         }
 
-        // update player spells
-        SpellManager spellManager = new SpellManager(player, plugin);
-        for (Spell spell : spellManager.getClassSpells(getRpgClass(player))) {
-            if (correctLevel >= spellManager.getSpellLevel(spell) && !spellManager.getKnownSpells(player).contains(spell)){
-                spellManager.teachSpell(player, spell);
-                player.sendMessage(ChatColor.GOLD + "You learned " + spellManager.getDisplayName(spell) + "!");
+        if (updated) {
+            player.sendMessage(String.format(plugin.getConfig().getString("messages.levelUp"), correctLevel)); // tell the player they've levelled up!
+            SpellManager spellManager = new SpellManager(player, plugin);
+            for (Spell spell : spellManager.getClassSpells(getRpgClass(player))) { // loop through the class's spells and see if any new ones become available with the level change.
+                if (spell.getLevel(plugin) == correctLevel) {
+                    player.sendMessage(String.format(plugin.getConfig().getString("messages.learnedSpell"), spell.getDisplayName(plugin)));
+                }
             }
         }
-
 
         return updated;
     }
@@ -155,7 +154,6 @@ public class RpgManager {
         // initialize player in config
         RpgManager rpgManager = new RpgManager(plugin);
         rpgManager.setSoulPoints(player, 0);
-        rpgManager.updateLevelAndSpells(player);
         rpgManager.setRpgClass(player, RpgClass.NONE);
         rpgManager.setFirstJoin(player, true);
 

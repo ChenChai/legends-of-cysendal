@@ -45,8 +45,7 @@ public class UserInterfaceListener implements Listener {
         RpgManager rpgManager = new RpgManager(plugin);
         Player player = (Player) event.getPlayer();
         if (isClassSelectScreen(event.getInventory()) && rpgManager.getRpgClass(player) == RpgClass.NONE) {
-            player.sendMessage(ChatColor.YELLOW + "You haven't chosen a class! Type /loc reset to choose a class. " +
-                    "Until you choose a class, you will not be able to gain soul points or learn spells!");
+            player.sendMessage(plugin.getConfig().getString("errors.classNotChosen"));
         }
     }
 
@@ -58,9 +57,6 @@ public class UserInterfaceListener implements Listener {
 
         ItemStack itemStack = event.getCurrentItem();
         Player player = (Player) event.getWhoClicked();
-
-
-
 
         // check if the clicked inventory is the same as the intro inventory
         if (isClassSelectScreen(inventory)) {
@@ -84,7 +80,7 @@ public class UserInterfaceListener implements Listener {
                         rpgManager.setRpgClass(player, rpgClass);
                         player.sendMessage("You are now a " + rpgClass.toString());
                         player.closeInventory();
-                        rpgManager.updateLevelAndSpells(player);
+                        rpgManager.updateLevel(player); // save the level update for until the player has chosen a class, so they see what spells they learn.
                     }
                 }
             }
