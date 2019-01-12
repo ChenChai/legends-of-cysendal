@@ -6,9 +6,9 @@ classes:
   MAGE:
     spells: ["LIGHTNING_BOLT"]
   RANGER:
-    spells: ["FLEET_OF_FOOT", "LIGHTNING_BOLT"]
+    spells: ["FLEET_OF_FOOT", "LIGHTNING_BOLT", "EXPLODE"]
 
-spells: # cooldown and duration are in ticks. 20 ticks = 1 second.
+spells: # cooldown and duration are in ticks. 20 ticks = 1 second. Mandatory fields: level, displayName lore, costItemNum, costItemType, and cooldown.
   LIGHTNING_BOLT:
     level: 2
     displayName: "Lightning Bolt"
@@ -26,7 +26,13 @@ spells: # cooldown and duration are in ticks. 20 ticks = 1 second.
     cooldown: 200
     duration: 200
     amplifier: 4
-
+  EXPLODE:
+    level: 1
+    displayName: "Explode"
+    lore: "You make an explosion surrounding yourself."
+    costItemNum: 2
+    costItemType: "FEATHER"
+    cooldown: 100
 
 messages:
   learnedSpell: "§6You learned a new spell, %s! Type '/spell' to check it out!"

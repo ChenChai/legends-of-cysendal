@@ -54,6 +54,7 @@ public class SpellManager {
         switch (spell) {
             case LIGHTNING_BOLT: Spell.LIGHTNING_BOLT.makeEffect(player, plugin); break;
             case FLEET_OF_FOOT: Spell.FLEET_OF_FOOT.makeEffect(player, plugin); break;
+            case EXPLODE: Spell.EXPLODE.makeEffect(player, plugin); break;
             default: return false;
         }
 

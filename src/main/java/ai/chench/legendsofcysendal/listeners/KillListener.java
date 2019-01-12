@@ -69,8 +69,6 @@ public class KillListener implements Listener {
                 }
             }
         }
-
-
     }
 
 }

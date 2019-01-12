@@ -1,5 +1,6 @@
 package ai.chench.legendsofcysendal;
 
+import ai.chench.legendsofcysendal.listeners.ExplosionListener;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,7 +24,15 @@ public enum Spell {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, duration, amplifier), true);
             return true;
         }
-    };
+    },
+    EXPLODE {
+        @Override
+        public boolean makeEffect(Player player, Plugin plugin) {
+            ExplosionListener explosionListener = Main.explosionListener;
+            return explosionListener.createExplosion(player, player.getLocation(), 4.0f, false);
+        }
+    }
+    ;
 
 
     public abstract boolean makeEffect(Player player, Plugin plugin);
