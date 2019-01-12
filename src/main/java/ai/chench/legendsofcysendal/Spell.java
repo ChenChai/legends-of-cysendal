@@ -29,7 +29,7 @@ public enum Spell {
         @Override
         public boolean makeEffect(Player player, Plugin plugin) {
             ExplosionListener explosionListener = Main.explosionListener;
-            return explosionListener.createExplosion(player, player.getLocation(), 4.0f, false);
+            return explosionListener.createExplosion(player, player.getLocation(), 4.0f, false, 6.0f);
         }
     }
     ;
