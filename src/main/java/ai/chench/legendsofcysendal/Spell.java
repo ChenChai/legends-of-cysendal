@@ -33,6 +33,10 @@ public enum Spell {
         return plugin.getConfig().getString("spells." + this.toString() + ".displayName");
     }
 
+    public int getCoolDown(Plugin plugin) {
+        return plugin.getConfig().getInt("spells." + this.toString() + ".cooldown");
+    }
+
     public int getLevel(Plugin plugin) {
         return plugin.getConfig().getInt("spells." + this.toString() + ".level");
     }

@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.RayTraceResult;
 
@@ -23,14 +24,29 @@ public class SpellManager {
     // attempts to cast a spell, trying to consume items and make the spell's effect.
     public boolean castSpell(Spell spell){
         RpgManager rpgManager = new RpgManager(plugin);
+
+        // if spell is not yet off cooldown; i.e. the world time has not reached the cooldown time set yet.
+        if (player.hasMetadata(spell.toString())) {
+            long cooldownTime = player.getMetadata(spell.toString()).get(0).asLong() - player.getWorld().getTime();
+            if (cooldownTime > 0) {
+                player.sendMessage(ChatColor.YELLOW + String.format(plugin.getConfig().getString("errors.spells.onCooldown"), spell.getDisplayName(plugin), (float) cooldownTime / 20.0));
+                return false;
+            }
+        }
+
+        // check if player is right class to cast spell
         if (!isClassSpell(spell, rpgManager.getRpgClass(player))) {
             player.sendMessage(ChatColor.YELLOW + plugin.getConfig().getString("errors.spells.wrongClass"));
+            return false;
         }
+
+        // check if player is high enough level to cast spell
         if (rpgManager.getLevel(player) < spell.getLevel(plugin)) {
             player.sendMessage(ChatColor.YELLOW + plugin.getConfig().getString("errors.spells.levelTooLow"));
             return false;
         }
 
+        // check if player has resources to cast spell
         if (!consumeCost(player, spell)) {
             return false;
         }
@@ -40,6 +56,10 @@ public class SpellManager {
             case FLEET_OF_FOOT: Spell.FLEET_OF_FOOT.makeEffect(player, plugin); break;
             default: return false;
         }
+
+        // set cooldown time as when the player can cast the spell again.
+        player.setMetadata(spell.toString(), new FixedMetadataValue(plugin, player.getWorld().getTime() + spell.getCoolDown(plugin)));
+
         return true;
     }
 

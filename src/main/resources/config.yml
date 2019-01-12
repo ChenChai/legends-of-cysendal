@@ -8,23 +8,25 @@ classes:
   RANGER:
     spells: ["FLEET_OF_FOOT", "LIGHTNING_BOLT"]
 
-
-spells:
+spells: # cooldown and duration are in ticks. 20 ticks = 1 second.
   LIGHTNING_BOLT:
     level: 2
     displayName: "Lightning Bolt"
     lore: "A savage bolt of lightning streaks down from the sky where you are looking."
-    costItemNum: 100
+    costItemNum: 1
     costItemType: "DIAMOND"
+    cooldown: 200
     range: 50
   FLEET_OF_FOOT:
     level: 1
     displayName: "Fleet of Foot"
     lore: "You draw upon the powers of the wild, gaining a burst of speed."
-    costItemNum: 0
+    costItemNum: 1
     costItemType: "FEATHER"
-    duration: 2000
+    cooldown: 200
+    duration: 200
     amplifier: 4
+
 
 messages:
   learnedSpell: "§6You learned a new spell, %s! Type '/spell' to check it out!"
@@ -34,9 +36,11 @@ errors:
   spells:
     outOfRange: "The target is out of range."
     notKnown: "You do not know this spell."
+    onCooldown: "%s is on cooldown for another %.1f seconds!" # formats with spellname followed by number
     levelTooLow: "Your level is too low to cast this spell."
     wrongClass: "You are not the correct class to cast this spell."
     classNotChosen: "§EYou haven't chosen a class! Type /loc reset to choose a class. Until you choose a class, you will not be able to gain soul points or learn spells!" # player exited the class selection screen
+
 
 mobsp: # how many soul points killing a monster gives
   default: 1337 # for entities with custom names not in this list
@@ -99,7 +103,6 @@ mobsp: # how many soul points killing a monster gives
   ZOMBIE: 24
   ZOMBIE_HORSE: 5
   ZOMBIE_VILLAGER: 24
-
 
 lore:
   intro:
