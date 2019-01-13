@@ -1,11 +1,13 @@
 package ai.chench.legendsofcysendal.util;
 
 import ai.chench.legendsofcysendal.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 // this class handles the creation and management of parties, which are lists of players with a leader, stored in configuration.
 // a player's party is stored as a party name in their config. Party names are unique, and a party is identified by its party name.
@@ -100,5 +102,9 @@ public class PartyManager {
     // returns the name of the party the player is in, or null if the player is not in a party.
     public String getParty(Player player) {
         return main.getPlayerDataConfig().getString("players." + player.getUniqueId().toString() + ".party", null);
+    }
+
+    public Player getPartyLeader(String partyName) {
+        return (Player) Bukkit.getOfflinePlayer(UUID.fromString(main.getPlayerDataConfig().getString("parties." + partyName + ".leader", null)));
     }
 }

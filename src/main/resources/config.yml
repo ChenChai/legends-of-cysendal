@@ -48,7 +48,7 @@ errors:
   party:
     alreadyInParty: "You are already in a party! Type '/party leave' or '/party disband', first."
     partyNameTaken: "That party name is already taken."
-    notInParty: "You are not currently in a party."
+    notInParty: "You are not currently in a party. Type '/party help' for help!"
     notPartyLeader: "You are not the leader of this party. Only the party leader can perform this action."
   spells:
     outOfRange: "The target is out of range."

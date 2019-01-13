@@ -24,7 +24,7 @@ public class CommandParty implements CommandExecutor {
         PartyManager partyManager = new PartyManager(main);
 
         if (args.length == 0) {
-            sendPartyInstructions(player);
+            sendPartyInfo(player);
             return true;
         }
         // /party info
@@ -34,8 +34,15 @@ public class CommandParty implements CommandExecutor {
         }
 
         // /party create <partyName>
-        if (args.length >= 2 && args[0].equalsIgnoreCase("create")) {
-            partyManager.createParty(player, args[1]);
+        if (args[0].equalsIgnoreCase("create")) {
+
+            // if sender did not specify a party name
+            if (args.length < 2) {
+                player.sendMessage("/party create <partyName>");
+                return true;
+            }
+
+            partyManager.createParty(player, args[1]); // attempt to create a party.
             return true;
         }
 
@@ -67,9 +74,19 @@ public class CommandParty implements CommandExecutor {
         PartyManager partyManager = new PartyManager(main);
 
         String partyName = partyManager.getParty(player);
+
+        if (partyName == null) {
+            player.sendMessage("errors.party.notInParty");
+            return;
+        }
+
+
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + partyName);
+        player.sendMessage(ChatColor.DARK_GRAY + "Type '/party help' for help.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
+        player.sendMessage(ChatColor.DARK_GREEN + "Leader: " + partyManager.getPartyLeader(partyName).getDisplayName());
+
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
 
     }
