@@ -29,7 +29,10 @@ public enum Spell {
         @Override
         public boolean makeEffect(Player player, Plugin plugin) {
             ExplosionListener explosionListener = Main.explosionListener;
-            return explosionListener.createExplosion(player, player.getLocation(), 4.0f, false, 6.0f);
+            double explosionPower = plugin.getConfig().getDouble("spells." + this.toString() + ".explosionPower");
+            double maxDamage = plugin.getConfig().getDouble("spells." + this.toString() + ".maxDamage");
+            boolean setFire = plugin.getConfig().getBoolean("spells." + this.toString() + ".setFire");
+            return explosionListener.createExplosion(player, player.getLocation(), (float) explosionPower, setFire, (float) maxDamage);
         }
     }
     ;

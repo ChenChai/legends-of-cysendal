@@ -33,6 +33,9 @@ spells: # cooldown and duration are in ticks. 20 ticks = 1 second. Mandatory fie
     costItemNum: 2
     costItemType: "FEATHER"
     cooldown: 100
+    explosionPower: 4.0
+    maxDamage: 6.0
+    setFire: true
 
 messages:
   learnedSpell: "§6You learned a new spell, %s! Type '/spell' to check it out!"

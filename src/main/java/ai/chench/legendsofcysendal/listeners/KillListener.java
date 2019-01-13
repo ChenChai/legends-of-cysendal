@@ -24,6 +24,8 @@ public class KillListener implements Listener {
     // count up the total damage they have done.
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+
+        if (!(event.getEntity() instanceof  Damageable)) { return; }
         Damageable entity = (Damageable) event.getEntity();
 
         if (event.getDamager() instanceof Player) {
