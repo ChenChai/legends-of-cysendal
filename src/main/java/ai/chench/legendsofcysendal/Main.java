@@ -1,6 +1,7 @@
 package ai.chench.legendsofcysendal;
 
 import ai.chench.legendsofcysendal.commands.CommandLoc;
+import ai.chench.legendsofcysendal.commands.CommandParty;
 import ai.chench.legendsofcysendal.commands.CommandSoulPoints;
 import ai.chench.legendsofcysendal.commands.CommandSpell;
 import ai.chench.legendsofcysendal.listeners.ExplosionListener;
@@ -38,6 +39,7 @@ public class Main extends JavaPlugin {
         getCommand("getsp").setExecutor(commandSoulPoints);
         getCommand("loc").setExecutor(new CommandLoc(this));
         getCommand("spell").setExecutor(new CommandSpell(this));
+        getCommand("party").setExecutor(new CommandParty(this));
 
         // bind listeners to listen to events in the Minecraft
         getServer().getPluginManager().registerEvents(new UserInterfaceListener(this), this);
