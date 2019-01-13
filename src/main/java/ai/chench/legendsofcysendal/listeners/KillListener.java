@@ -1,5 +1,6 @@
 package ai.chench.legendsofcysendal.listeners;
 
+import ai.chench.legendsofcysendal.util.DamageManager;
 import ai.chench.legendsofcysendal.util.RpgManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,23 +29,8 @@ public class KillListener implements Listener {
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
             Bukkit.broadcastMessage(entity.getName() + " took " + event.getFinalDamage());
-            double damageContribution = event.getFinalDamage();
-
-            String uniqueId = player.getUniqueId().toString();
-            String metadataKey = uniqueId + "damageContribution";
-
-            // limit this hit's max damage to the entity's current health
-            damageContribution = (damageContribution > entity.getHealth() ? entity.getHealth() : damageContribution);
-
-            // add their previous damage contribution to their current
-            if (entity.hasMetadata(metadataKey)) {
-                double previousDamageContribution = entity.getMetadata(metadataKey).get(0).asDouble();
-                damageContribution += previousDamageContribution;
-            }
-
-            // update the metadata
-            entity.removeMetadata(metadataKey, plugin);
-            entity.setMetadata(metadataKey, new FixedMetadataValue(plugin, damageContribution));
+            DamageManager damageManager = new DamageManager(plugin);
+            damageManager.addDamageContribution(player, entity, event.getFinalDamage());
         }
     }
 
@@ -53,10 +39,13 @@ public class KillListener implements Listener {
         Entity entity = event.getEntity();
         for (World world : Bukkit.getWorlds()) {
             for (Player player : world.getPlayers()) {
-                if (entity.hasMetadata(player.getUniqueId().toString() + "damageContribution")) {
-                    player.sendMessage("You did " +
-                            String.format("%.1f" ,entity.getMetadata(player.getUniqueId().toString() + "damageContribution").get(0).asDouble())
-                            + " damage to " + entity.getName());
+                DamageManager damageManager = new DamageManager(plugin);
+                double damageContribution = damageManager.getDamageContribution(player, entity);
+
+                if (damageContribution > 0) {
+                    player.sendMessage("You did " + String.format("%.1f" ,damageContribution) + " damage to " + entity.getName());
+
+                    // award soul points for kill
                     RpgManager rpgManager = new RpgManager(plugin);
                     int points = rpgManager.getEntitySoulPointValue(entity);
                     rpgManager.addSoulPoints(player, points);

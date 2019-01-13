@@ -56,5 +56,4 @@ public class ExplosionListener implements Listener {
         Player owner = explosionOwner;
         Bukkit.broadcastMessage(owner.getDisplayName() + " did " + event.getDamage() + " explosive damage to " + event.getEntity().getName());
     }
-
 }
