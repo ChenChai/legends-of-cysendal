@@ -3,6 +3,7 @@ package ai.chench.legendsofcysendal.util;
 import ai.chench.legendsofcysendal.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -105,38 +106,38 @@ public class PartyManager {
     }
 
     public Player getLeader(String partyName) {
-        return (Player) Bukkit.getOfflinePlayer(UUID.fromString(main.getPlayerDataConfig().getString("parties." + partyName + ".leader", null)));
+        return Bukkit.getOfflinePlayer(UUID.fromString(main.getPlayerDataConfig().getString("parties." + partyName + ".leader", null))).getPlayer();
     }
 
     // returns a list of the players in a party
-    public List<Player> getMembers(String partyName) {
+    public List<OfflinePlayer> getMembers(String partyName) {
         if (!isActive(partyName)) { return null; }
 
         // get list of players' UUIDs
         List<String> playerUidList = main.getPlayerDataConfig().getStringList("parties." + partyName + ".members");
 
-        List<Player> playerList = new ArrayList<Player>();
+        List<OfflinePlayer> playerList = new ArrayList<OfflinePlayer>();
 
         // convert UUIDs to players
         for (String uid : playerUidList) {
-            playerList.add( (Player) Bukkit.getOfflinePlayer(UUID.fromString(uid)));
+            playerList.add(Bukkit.getOfflinePlayer(UUID.fromString(uid)));
         }
 
         return playerList;
     }
 
     // returns a list of the players who have been invited to a party
-    public List<Player> getInviteList(String partyName) {
+    public List<OfflinePlayer> getInviteList(String partyName) {
         if (!isActive(partyName)) { return null; }
 
         // get list of players' UUIDs
         List<String> playerUidList = main.getPlayerDataConfig().getStringList("parties." + partyName + ".invites");
 
-        List<Player> playerList = new ArrayList<Player>();
+        List<OfflinePlayer> playerList = new ArrayList<OfflinePlayer>();
 
         // convert UUIDs to players
         for (String uid : playerUidList) {
-            playerList.add( (Player) Bukkit.getOfflinePlayer(UUID.fromString(uid)));
+            playerList.add(Bukkit.getOfflinePlayer(UUID.fromString(uid)));
         }
 
         return playerList;
@@ -163,12 +164,12 @@ public class PartyManager {
         }
 
         // get the current invitation list
-        List<Player> inviteList = getInviteList(partyName);
+        List<OfflinePlayer> inviteList = getInviteList(partyName);
         inviteList.add(invited); // add the player to the invitation list.
 
         List<String> uidList = new ArrayList<String>();
 
-        for (Player p : inviteList) {
+        for (OfflinePlayer p : inviteList) {
             uidList.add(p.getUniqueId().toString());
         }
 

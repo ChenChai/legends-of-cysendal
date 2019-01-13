@@ -4,6 +4,7 @@ import ai.chench.legendsofcysendal.Main;
 import ai.chench.legendsofcysendal.util.PartyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -98,18 +99,30 @@ public class CommandParty implements CommandExecutor {
             return;
         }
 
-        List<Player> memberList = partyManager.getMembers(partyName);
+        List<OfflinePlayer> memberList = partyManager.getMembers(partyName);
+        List<OfflinePlayer> inviteList = partyManager.getInviteList(partyName);
+
 
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + partyName);
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
-        player.sendMessage(ChatColor.DARK_GREEN + "Leader: " + ChatColor.WHITE + partyManager.getLeader(partyName).getDisplayName());
-        player.sendMessage(ChatColor.DARK_GREEN + "Members: ");
+        player.sendMessage(ChatColor.BLUE + "Leader: " + ChatColor.WHITE + partyManager.getLeader(partyName).getDisplayName());
+        player.sendMessage(ChatColor.BLUE + "Members: " + ChatColor.GREEN + " (online) " + ChatColor.GRAY + " (offline) ");
 
-        for (Player member : memberList) {
-            player.sendMessage("- " + member.getDisplayName());
+        for (OfflinePlayer member : memberList) {
+            if (member.isOnline()) {
+                player.sendMessage(ChatColor.GREEN + "- " + member.getName());
+            } else {
+                player.sendMessage(ChatColor.GRAY + "- " + member.getName());
+            }
+
         }
 
+        player.sendMessage(ChatColor.BLUE + "Pending Invitations: ");
+
+        for (OfflinePlayer invited : inviteList) {
+            player.sendMessage(ChatColor.GRAY + "- " + invited.getName());
+        }
 
         player.sendMessage(ChatColor.DARK_GRAY + "Type '/party help' for help.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
