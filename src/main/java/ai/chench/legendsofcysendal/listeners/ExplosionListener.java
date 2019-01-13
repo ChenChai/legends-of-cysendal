@@ -1,7 +1,9 @@
 package ai.chench.legendsofcysendal.listeners;
 
+import ai.chench.legendsofcysendal.util.DamageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,8 +40,9 @@ public class ExplosionListener implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         // we only want to listen for living entities getting damaged, not things like items.
-        if (!(event.getEntity() instanceof LivingEntity)) { return; }
+        if (!(event.getEntity() instanceof Damageable)) { return; }
 
+        Damageable entity = (Damageable) event.getEntity();
         // we only want to listen for damage caused by explosion, return otherwise.
         if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_EXPLOSION && event.getCause() != EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) {
             return;
@@ -54,6 +57,10 @@ public class ExplosionListener implements Listener {
         event.setDamage(Math.min(event.getDamage(), maxDamage));
 
         Player owner = explosionOwner;
-        Bukkit.broadcastMessage(owner.getDisplayName() + " did " + event.getDamage() + " explosive damage to " + event.getEntity().getName());
+
+        // add damage as player's damage contribution.
+        DamageManager damageManager = new DamageManager(plugin);
+        damageManager.addDamageContribution(explosionOwner, entity, event.getDamage());
+
     }
 }

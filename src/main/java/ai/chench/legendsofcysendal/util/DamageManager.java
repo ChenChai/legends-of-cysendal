@@ -14,11 +14,12 @@ public class DamageManager {
 
     // adds damage contribution to an entity's metadata
     public void addDamageContribution(Player player, Damageable damagedEntity, double damageContribution) {
+        player.sendMessage(damagedEntity.getName() + " took " + damageContribution); // for debugging
 
         String uniqueId = player.getUniqueId().toString();
         String metadataKey = uniqueId + "damageContribution";
 
-        // limit the hit's max damage to the entity's current health
+        // limit the max damage credit a player is given to the entity's current health
         damageContribution = (damageContribution > damagedEntity.getHealth() ? damagedEntity.getHealth() : damageContribution);
 
         // add their previous damage contribution to their current
