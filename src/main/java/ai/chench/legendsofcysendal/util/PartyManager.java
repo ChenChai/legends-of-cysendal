@@ -31,12 +31,15 @@ public class PartyManager {
         // set the party's status to active
         main.getPlayerDataConfig().set("parties." + partyName + ".active", true);
 
+        // add the party creator to the party's member list
         List<String> playerList = new ArrayList<String>();
-
         playerList.add(partyLeader.getUniqueId().toString());
-
         main.getPlayerDataConfig().set("parties." + partyName + ".members", playerList);
 
+        // add the party creator as the party leader.
+        main.getPlayerDataConfig().set("parties." + partyName + ".leader", partyLeader.getUniqueId().toString());
+
+        // set the party creator's current party to this one.
         main.getPlayerDataConfig().set("players." + partyLeader.getUniqueId().toString() + ".party", partyName);
 
         main.savePlayerDataConfig();

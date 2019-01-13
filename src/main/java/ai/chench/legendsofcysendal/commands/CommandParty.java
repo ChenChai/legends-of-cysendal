@@ -30,6 +30,13 @@ public class CommandParty implements CommandExecutor {
             return true;
         }
 
+
+        if (args.length >= 1 && args[0].equalsIgnoreCase("disband")) {
+
+        }
+
+
+
         return false;
     }
 
