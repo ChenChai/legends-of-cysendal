@@ -104,7 +104,28 @@ public class PartyManager {
         return main.getPlayerDataConfig().getString("players." + player.getUniqueId().toString() + ".party", null);
     }
 
-    public Player getPartyLeader(String partyName) {
+    public Player getLeader(String partyName) {
         return (Player) Bukkit.getOfflinePlayer(UUID.fromString(main.getPlayerDataConfig().getString("parties." + partyName + ".leader", null)));
+    }
+
+    // returns a list of the players in a party
+    public List<Player> getMembers(String partyName) {
+        if (!isActive(partyName)) { return null; }
+
+        // get list of players' UUIDs
+        List<String> playerUidList = main.getPlayerDataConfig().getStringList("parties." + partyName + ".members");
+
+        List<Player> playerList = new ArrayList<Player>();
+
+        // convert UUIDs to players
+        for (String uid : playerUidList) {
+            playerList.add( (Player) Bukkit.getOfflinePlayer(UUID.fromString(uid)));
+        }
+
+        return playerList;
+    }
+
+    private boolean isActive(String partyName) {
+        return main.getPlayerDataConfig().getBoolean("parties." + partyName + ".active", false);
     }
 }

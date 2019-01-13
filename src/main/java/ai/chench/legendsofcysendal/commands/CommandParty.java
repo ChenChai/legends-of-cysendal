@@ -8,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class CommandParty implements CommandExecutor {
 
     private Main main;
@@ -80,13 +82,20 @@ public class CommandParty implements CommandExecutor {
             return;
         }
 
+        List<Player> memberList = partyManager.getMembers(partyName);
 
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + partyName);
-        player.sendMessage(ChatColor.DARK_GRAY + "Type '/party help' for help.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
-        player.sendMessage(ChatColor.DARK_GREEN + "Leader: " + partyManager.getPartyLeader(partyName).getDisplayName());
+        player.sendMessage(ChatColor.DARK_GREEN + "Leader: " + ChatColor.WHITE + partyManager.getLeader(partyName).getDisplayName());
+        player.sendMessage(ChatColor.DARK_GREEN + "Members: ");
 
+        for (Player member : memberList) {
+            player.sendMessage("- " + member.getDisplayName());
+        }
+
+
+        player.sendMessage(ChatColor.DARK_GRAY + "Type '/party help' for help.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
 
     }
