@@ -16,3 +16,6 @@ commands:
   spell:
     description: casts a spell
     usage: /spell <spell>
+  party:
+    description: create and manage a party.
+    usage: /party [ create | invite | join | leave | disband | list ]
