@@ -96,4 +96,9 @@ public class PartyManager {
         disbandingPlayer.sendMessage(main.getConfig().getString("messages.party.partyDisbanded"));
         return true;
     }
+
+    // returns the name of the party the player is in, or null if the player is not in a party.
+    public String getParty(Player player) {
+        return main.getPlayerDataConfig().getString("players." + player.getUniqueId().toString() + ".party", null);
+    }
 }

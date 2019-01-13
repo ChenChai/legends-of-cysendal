@@ -23,6 +23,16 @@ public class CommandParty implements CommandExecutor {
         Player player = (Player) sender;
         PartyManager partyManager = new PartyManager(main);
 
+        if (args.length == 0) {
+            sendPartyInstructions(player);
+            return true;
+        }
+        // /party info
+        if (args[0].equalsIgnoreCase("info")) {
+            sendPartyInfo(player);
+            return true;
+        }
+
         // /party create <partyName>
         if (args.length >= 2 && args[0].equalsIgnoreCase("create")) {
             partyManager.createParty(player, args[1]);
@@ -31,25 +41,37 @@ public class CommandParty implements CommandExecutor {
 
 
         // /party disband
-        if (args.length >= 1 && args[0].equalsIgnoreCase("disband")) {
+        if (args[0].equalsIgnoreCase("disband")) {
             partyManager.disbandParty(player);
             return true;
         }
-
 
         sendPartyInstructions(player);
         return true;
     }
 
     // gives the player a party help menu.
-    public void sendPartyInstructions(Player player) {
+    private void sendPartyInstructions(Player player) {
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.BOLD + "PARTY HELP");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.BLUE + "/party help:" + ChatColor.WHITE + " Brings up help menu.");
         player.sendMessage(ChatColor.BLUE + "/party create <name>:" + ChatColor.WHITE + " Creates a party with the specified name. Only one party can have a specific name at a time.");
         player.sendMessage(ChatColor.BLUE + "/party disband:" + ChatColor.WHITE + " Disbands a party. Only party leaders can use this command.");
+        player.sendMessage(ChatColor.BLUE + "/party info:" + ChatColor.WHITE + " Displays information about your party.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
+    }
+
+    // sends a player their party info, or a note that they are not in a party.
+    private void sendPartyInfo(Player player) {
+        PartyManager partyManager = new PartyManager(main);
+
+        String partyName = partyManager.getParty(player);
+        player.sendMessage(ChatColor.DARK_GRAY + "=====================");
+        player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + partyName);
+        player.sendMessage(ChatColor.DARK_GRAY + "=====================");
+        player.sendMessage(ChatColor.DARK_GRAY + "=====================");
+
     }
 
 }
