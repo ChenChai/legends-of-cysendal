@@ -41,12 +41,15 @@ messages:
   learnedSpell: "§6You learned a new spell, %s! Type '/spell' to check it out!"
   levelUp: "§6§LYou have levelled up to level %d!"
   party:
-    createdParty: "Your party has been created!"
+    partyCreated: "Your party has been created!"
+    partyDisbanded: "The party was successfully disbanded."
 
 errors:
   party:
     alreadyInParty: "You are already in a party! Type '/party leave' or '/party disband', first."
     partyNameTaken: "That party name is already taken."
+    notInParty: "You are not currently in a party."
+    notPartyLeader: "You are not the leader of this party. Only the party leader can perform this action."
   spells:
     outOfRange: "The target is out of range."
     notKnown: "You do not know this spell."
