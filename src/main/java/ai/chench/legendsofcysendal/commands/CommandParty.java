@@ -2,6 +2,7 @@ package ai.chench.legendsofcysendal.commands;
 
 import ai.chench.legendsofcysendal.Main;
 import ai.chench.legendsofcysendal.util.PartyManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -48,6 +49,21 @@ public class CommandParty implements CommandExecutor {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("invite")) {
+
+            if (args.length < 2) {
+                player.sendMessage("/party invite <player>");
+                return true;
+            }
+            Player invited = Bukkit.getPlayer(args[1]);
+            if (invited == null) {
+                player.sendMessage(main.getConfig().getString("errors.playerNotOnline"));
+                return true;
+            }
+            partyManager.invitePlayer(player, invited);
+            return true;
+        }
+
 
         // /party disband
         if (args[0].equalsIgnoreCase("disband")) {
@@ -78,7 +94,7 @@ public class CommandParty implements CommandExecutor {
         String partyName = partyManager.getParty(player);
 
         if (partyName == null) {
-            player.sendMessage("errors.party.notInParty");
+            player.sendMessage(main.getConfig().getString("errors.party.notInParty"));
             return;
         }
 

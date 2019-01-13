@@ -36,13 +36,13 @@ public class PartyManager {
     public boolean createParty(Player partyCreator, String partyName) {
 
         // if the person creating the party is already in a party
-        if (main.getPlayerDataConfig().getString("players." + partyCreator.getUniqueId().toString() + ".party", null) != null) {
+        if (getParty(partyCreator) != null) {
             partyCreator.sendMessage(ChatColor.YELLOW + main.getConfig().getString("errors.party.alreadyInParty"));
             return false;
         }
 
         // if a party under the same name is already active
-        if (main.getPlayerDataConfig().getBoolean("parties." + partyName + ".active", false)) {
+        if (isActive(partyName)) {
             partyCreator.sendMessage(ChatColor.YELLOW + main.getConfig().getString("errors.party.partyNameTaken"));
             return false;
         }
@@ -71,7 +71,7 @@ public class PartyManager {
     public boolean disbandParty(Player disbandingPlayer) {
         String playerUid = disbandingPlayer.getUniqueId().toString();
 
-        String partyName = main.getPlayerDataConfig().getString("players." + playerUid + ".party", null);
+        String partyName = getParty(disbandingPlayer);
 
         // check if the player is actually in a party.
         if (partyName == null) {
@@ -125,7 +125,60 @@ public class PartyManager {
         return playerList;
     }
 
+    // returns a list of the players who have been invited to a party
+    public List<Player> getInviteList(String partyName) {
+        if (!isActive(partyName)) { return null; }
+
+        // get list of players' UUIDs
+        List<String> playerUidList = main.getPlayerDataConfig().getStringList("parties." + partyName + ".invites");
+
+        List<Player> playerList = new ArrayList<Player>();
+
+        // convert UUIDs to players
+        for (String uid : playerUidList) {
+            playerList.add( (Player) Bukkit.getOfflinePlayer(UUID.fromString(uid)));
+        }
+
+        return playerList;
+    }
+
+
     private boolean isActive(String partyName) {
         return main.getPlayerDataConfig().getBoolean("parties." + partyName + ".active", false);
+    }
+
+    // attempts to have a player invite another player into the party.
+    public boolean invitePlayer(Player inviter, Player invited) {
+        String partyName = getParty(inviter);
+
+        if (partyName == null) {
+            inviter.sendMessage(main.getConfig().getString("errors.party.notInParty"));
+            return false;
+        }
+
+        // if inviter is not the leader.
+        if (!getLeader(partyName).equals(inviter)) {
+            inviter.sendMessage(main.getConfig().getString("errors.party.notPartyLeader"));
+            return false;
+        }
+
+        // get the current invitation list
+        List<Player> inviteList = getInviteList(partyName);
+        inviteList.add(invited); // add the player to the invitation list.
+
+        List<String> uidList = new ArrayList<String>();
+
+        for (Player p : inviteList) {
+            uidList.add(p.getUniqueId().toString());
+        }
+
+        main.getPlayerDataConfig().set("parties." + partyName + ".invites", uidList);
+
+        main.savePlayerDataConfig();
+
+        inviter.sendMessage(String.format(main.getConfig().getString("messages.party.inviteSent"), invited.getDisplayName()));
+        invited.sendMessage(String.format(main.getConfig().getString("messages.party.inviteReceived"), partyName, inviter.getDisplayName(), partyName));
+
+        return true;
     }
 }

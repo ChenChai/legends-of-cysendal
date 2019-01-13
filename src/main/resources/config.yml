@@ -43,7 +43,8 @@ messages:
   party:
     partyCreated: "Your party has been created!"
     partyDisbanded: "The party was successfully disbanded."
-
+    inviteSent: "You successfully sent an invitation to %s! Use /party kick <player> to revoke this invitation."
+    inviteReceived: "You were invited to join %s by %s! Type '/party join %s' to join."
 errors:
   party:
     alreadyInParty: "You are already in a party! Type '/party leave' or '/party disband', first."
@@ -57,7 +58,7 @@ errors:
     levelTooLow: "Your level is too low to cast this spell."
     wrongClass: "You are not the correct class to cast this spell."
   classNotChosen: "§EYou haven't chosen a class! Type /loc reset to choose a class. Until you choose a class, you will not be able to gain soul points or learn spells!" # player exited the class selection screen
-
+  playerNotOnline: "This player is not online or does not exist."
 
 mobsp: # how many soul points killing a monster gives
   default: 1337 # for entities with custom names not in this list
