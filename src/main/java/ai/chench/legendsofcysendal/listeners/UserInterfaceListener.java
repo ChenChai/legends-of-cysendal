@@ -1,5 +1,6 @@
 package ai.chench.legendsofcysendal.listeners;
 
+import ai.chench.legendsofcysendal.Main;
 import ai.chench.legendsofcysendal.util.RpgClass;
 import ai.chench.legendsofcysendal.util.RpgManager;
 import org.bukkit.ChatColor;
@@ -20,8 +21,12 @@ import java.util.List;
 public class UserInterfaceListener implements Listener {
 
     private Plugin plugin;
+    private Main main;
     public UserInterfaceListener(Plugin plugin) {
         this.plugin = plugin;
+        if (plugin instanceof  Main){
+            this.main = (Main) plugin;
+        }
     }
 
     @EventHandler
@@ -33,7 +38,7 @@ public class UserInterfaceListener implements Listener {
 
         // check if player is registered in config.yml
         // getConfig().isBoolean will return false if the path does not exist because it is the player's first time joining.
-        if (!plugin.getConfig().isBoolean("players." + uniqueId + ".firstJoin") || plugin.getConfig().getBoolean("players." + uniqueId + ".firstJoin")) {
+        if (!main.getPlayerDataConfig().isBoolean("players." + uniqueId + ".firstJoin") || main.getPlayerDataConfig().getBoolean("players." + uniqueId + ".firstJoin")) {
             RpgManager rpgManager = new RpgManager(plugin);
             rpgManager.resetPlayer(player);
         }

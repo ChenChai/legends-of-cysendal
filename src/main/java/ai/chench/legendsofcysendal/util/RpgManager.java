@@ -1,5 +1,6 @@
 package ai.chench.legendsofcysendal.util;
 
+import ai.chench.legendsofcysendal.Main;
 import ai.chench.legendsofcysendal.Spell;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,16 +17,20 @@ import java.util.List;
 // PREREQ: Player objects passed in must have valid UUID.
 public class RpgManager {
     Plugin plugin;
+    Main main;
 
     public RpgManager(Plugin plugin) {
         this.plugin = plugin;
+        if (plugin instanceof Main) {
+            this.main = (Main) plugin;
+        }
     }
 
     // returns the amount of soul points a player has
     public int getSoulPoints(Player player) {
         // check if the value is valid in the config file; if not, then default to zero.
-        if (!plugin.getConfig().isInt("players." + player.getUniqueId() + ".sp")) {
-            plugin.getConfig().set("players." + player.getUniqueId() + ".sp", 0);
+        if (!main.getPlayerDataConfig().isInt("players." + player.getUniqueId() + ".sp")) {
+            main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".sp", 0);
 
             /*
             plugin.getLogger().severe("Player " + player.getDisplayName() + " " +
@@ -33,28 +38,28 @@ public class RpgManager {
             return -1;
             */
         }
-        return plugin.getConfig().getInt("players." + player.getUniqueId() + ".sp");
+        return main.getPlayerDataConfig().getInt("players." + player.getUniqueId() + ".sp");
     }
 
     // sets the number of soul points a player has
     public void setSoulPoints(Player player, int points) {
-        plugin.getConfig().set("players." + player.getUniqueId() + ".sp", points);
-        plugin.saveConfig();
+        main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".sp", points);
+        main.savePlayerDataConfig();
     }
 
     // adds a number of soul points to the total a player has. Can be negative.
     public void addSoulPoints(Player player, int points) {
-        plugin.getConfig().set("players." + player.getUniqueId() + ".sp", points + getSoulPoints(player));
-        plugin.saveConfig();
+        main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".sp", points + getSoulPoints(player));
+        main.savePlayerDataConfig();
     }
 
     public int getLevel(Player player) {
-        if (!plugin.getConfig().isInt("players." + player.getUniqueId() + ".level")) {
+        if (!main.getPlayerDataConfig().isInt("players." + player.getUniqueId() + ".level")) {
             plugin.getLogger().severe("Player " + player.getDisplayName() + " " +
                     "has invalid value for level in config.yml!");
             return -1;
         }
-        return plugin.getConfig().getInt("players." + player.getUniqueId() + ".level");
+        return main.getPlayerDataConfig().getInt("players." + player.getUniqueId() + ".level");
     }
 
     // compares player's soul points to level thresholds, and changes player's level accordingly
@@ -66,12 +71,12 @@ public class RpgManager {
         int points = getSoulPoints(player);
 
         // if player is new player, set their level to 1.
-        if (!plugin.getConfig().isInt("players." + player.getUniqueId() + ".level")) {
-            plugin.getConfig().set("players." + player.getUniqueId() + ".level", 1);
+        if (!main.getPlayerDataConfig().isInt("players." + player.getUniqueId() + ".level")) {
+            main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".level", 1);
             updated = true;
         }
 
-        int playerLevel = plugin.getConfig().getInt("players." + player.getUniqueId() + ".level");
+        int playerLevel = main.getPlayerDataConfig().getInt("players." + player.getUniqueId() + ".level");
         int correctLevel = 0;
 
         // TODO: swap to binary search
@@ -82,8 +87,8 @@ public class RpgManager {
         }
 
         if (correctLevel != playerLevel) {
-            plugin.getConfig().set("players." + player.getUniqueId() + ".level", correctLevel);
-            plugin.saveConfig();
+            main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".level", correctLevel);
+            main.savePlayerDataConfig();
             updated = true;
         }
 
@@ -101,12 +106,12 @@ public class RpgManager {
     }
     public RpgClass getRpgClass(Player player) {
 
-        if (!plugin.getConfig().isString("players." + player.getUniqueId() + ".class")){
+        if (!main.getPlayerDataConfig().isString("players." + player.getUniqueId() + ".class")){
             setRpgClass(player, RpgClass.NONE);
             return RpgClass.NONE;
         }
 
-        String className = plugin.getConfig().getString("players." + player.getUniqueId() + ".class");
+        String className = main.getPlayerDataConfig().getString("players." + player.getUniqueId() + ".class");
         for (RpgClass rpgClass : RpgClass.values()) {
             if (rpgClass.toString().equals(className)) return rpgClass;
         }
@@ -114,8 +119,8 @@ public class RpgManager {
         return RpgClass.NONE;
     }
     public void setRpgClass(Player player, RpgClass rpgClass) {
-        plugin.getConfig().set("players." + player.getUniqueId() + ".class", rpgClass.toString());
-        plugin.saveConfig();
+        main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".class", rpgClass.toString());
+        main.savePlayerDataConfig();
     }
     public boolean isFirstJoin(Player player) {
         if (!plugin.getConfig().isBoolean("players." + player.getUniqueId() + ".firstJoin")) {
@@ -124,11 +129,11 @@ public class RpgManager {
             return false;
         }
 
-        return plugin.getConfig().getBoolean("players." + player.getUniqueId() + ".firstJoin");
+        return main.getPlayerDataConfig().getBoolean("players." + player.getUniqueId() + ".firstJoin");
     }
     public void setFirstJoin(Player player, boolean firstJoin) {
-        plugin.getConfig().set("players." + player.getUniqueId() + ".firstJoin", firstJoin);
-        plugin.saveConfig();
+        main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".firstJoin", firstJoin);
+        main.savePlayerDataConfig();
     }
 
     // returns the minimum number of soul points needed to be a given level, or -1 if level is out of bounds.

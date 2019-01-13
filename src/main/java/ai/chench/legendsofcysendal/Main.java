@@ -58,6 +58,14 @@ public class Main extends JavaPlugin {
         return playerDataConfig;
     }
 
+    public void savePlayerDataConfig() {
+        try {
+            playerDataConfig.save(playerDataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // loads data file into custom config on launch
     private void setupPlayerDataConfig() {
             playerDataFile = new File(getDataFolder(), "playerData.yml");
@@ -77,4 +85,5 @@ public class Main extends JavaPlugin {
                 e.printStackTrace();
             }
     }
+
 }
