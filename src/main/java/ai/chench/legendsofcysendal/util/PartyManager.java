@@ -87,6 +87,11 @@ public class PartyManager {
             return false;
         }
 
+        // loop through players in the party and set their party to null.
+        for (OfflinePlayer member : getMembers(partyName)) {
+            main.getPlayerDataConfig().set("players." + member.getUniqueId().toString() + ".party", null);
+        }
+
         main.getPlayerDataConfig().set("parties." + partyName + ".leader", null);
         main.getPlayerDataConfig().set("parties." + partyName + ".invites", null);
         main.getPlayerDataConfig().set("parties." + partyName + ".members", null);
@@ -102,11 +107,15 @@ public class PartyManager {
 
     // returns the name of the party the player is in, or null if the player is not in a party.
     public String getParty(Player player) {
-        return main.getPlayerDataConfig().getString("players." + player.getUniqueId().toString() + ".party", null);
+        String partyName =  main.getPlayerDataConfig().getString("players." + player.getUniqueId().toString() + ".party", null);
+        if (!isActive(partyName)) {
+            return null;
+        }
+        return partyName;
     }
 
-    public Player getLeader(String partyName) {
-        return Bukkit.getOfflinePlayer(UUID.fromString(main.getPlayerDataConfig().getString("parties." + partyName + ".leader", null))).getPlayer();
+    public OfflinePlayer getLeader(String partyName) {
+        return Bukkit.getOfflinePlayer(UUID.fromString(main.getPlayerDataConfig().getString("parties." + partyName + ".leader", null)));
     }
 
     // returns a list of the players in a party

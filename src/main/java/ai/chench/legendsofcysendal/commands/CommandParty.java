@@ -120,7 +120,7 @@ public class CommandParty implements CommandExecutor {
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + partyName);
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
-        player.sendMessage(ChatColor.BLUE + "Leader: " + ChatColor.WHITE + partyManager.getLeader(partyName).getDisplayName());
+        player.sendMessage(ChatColor.BLUE + "Leader: " + ChatColor.WHITE + partyManager.getLeader(partyName).getName());
         player.sendMessage(ChatColor.BLUE + "Members: " + ChatColor.GREEN + " (online) " + ChatColor.GRAY + " (offline) ");
 
         for (OfflinePlayer member : memberList) {
