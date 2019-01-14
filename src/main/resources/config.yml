@@ -45,12 +45,15 @@ messages:
     partyDisbanded: "The party was successfully disbanded."
     inviteSent: "You successfully sent an invitation to %s! Use /party kick <player> to revoke this invitation."
     inviteReceived: "You were invited to join %s by %s! Type '/party join %s' to join."
+    joinedParty: "You have successfully joined %s!"
 errors:
   party:
     alreadyInParty: "You are already in a party! Type '/party leave' or '/party disband', first."
     partyNameTaken: "That party name is already taken."
     notInParty: "You are not currently in a party. Type '/party help' for help!"
     notPartyLeader: "You are not the leader of this party. Only the party leader can perform this action."
+    partyDoesNotExist: "This party does not exist! It may have been disbanded."
+    notInvited: "You have not been invited to this party."
   spells:
     outOfRange: "The target is out of range."
     notKnown: "You do not know this spell."

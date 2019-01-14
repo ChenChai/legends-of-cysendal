@@ -50,6 +50,18 @@ public class CommandParty implements CommandExecutor {
             return true;
         }
 
+        // /party join <partyName>
+        if (args[0].equalsIgnoreCase("join")) {
+            if (args.length < 2) {
+                player.sendMessage("/party join <partyName>");
+                return true;
+            }
+            // attempt to join party
+            partyManager.acceptInvite(player, args[1]);
+            return true;
+        }
+
+
         if (args[0].equalsIgnoreCase("invite")) {
 
             if (args.length < 2) {
@@ -85,6 +97,8 @@ public class CommandParty implements CommandExecutor {
         player.sendMessage(ChatColor.BLUE + "/party create <name>:" + ChatColor.WHITE + " Creates a party with the specified name. Only one party can have a specific name at a time.");
         player.sendMessage(ChatColor.BLUE + "/party disband:" + ChatColor.WHITE + " Disbands a party. Only party leaders can use this command.");
         player.sendMessage(ChatColor.BLUE + "/party info:" + ChatColor.WHITE + " Displays information about your party.");
+        player.sendMessage(ChatColor.BLUE + "/party invite <player>:" + ChatColor.WHITE + " Invites a player to the party.");
+        player.sendMessage(ChatColor.BLUE + "/party join <name>:" + ChatColor.WHITE + " Join a party if you have been invited to it!.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
     }
 

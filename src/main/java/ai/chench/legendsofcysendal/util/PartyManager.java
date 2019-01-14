@@ -148,6 +148,75 @@ public class PartyManager {
         return main.getPlayerDataConfig().getBoolean("parties." + partyName + ".active", false);
     }
 
+    // attempts to let player accept an invitation to a party. Returns true if player joined successfully.
+    public boolean acceptInvite(Player invited, String partyName) {
+        if (getParty(invited) != null) {
+            invited.sendMessage(main.getConfig().getString("errors.party.alreadyInParty"));
+            return false;
+        }
+
+        // check if party player is trying to join exists
+        if (!isActive(partyName)) {
+            invited.sendMessage(main.getConfig().getString("errors.party.partyDoesNotExist"));
+            return false;
+        }
+
+        // check if player is on the invitation list
+        List<OfflinePlayer> inviteList = getInviteList(partyName);
+
+        // if player is not on the invitation list
+        if (!inviteList.contains((OfflinePlayer) invited)) {
+            invited.sendMessage(main.getConfig().getString("errors.party.notInvited"));
+            return false;
+        }
+
+        // take player off the invited list
+        inviteList.remove(invited);
+        setInviteList(partyName, inviteList);
+
+        // add player to the member list
+        List<OfflinePlayer> memberList = getMembers(partyName);
+        memberList.add((OfflinePlayer) invited);
+        setMembers(partyName, memberList);
+
+        // change player's party to this one.
+        main.getPlayerDataConfig().set("players." + invited.getUniqueId().toString() + ".party", partyName);
+
+        // tell all members someone new joined
+        for (OfflinePlayer member : memberList) {
+
+            if (member.isOnline()) {
+                Player onlineMember = (Player) member;
+
+                onlineMember.sendMessage(String.format(main.getConfig().getString("messages.party.joinedParty"), partyName));
+            }
+        }
+        main.savePlayerDataConfig();
+
+        return true;
+    }
+
+    private void setInviteList(String partyName, List<OfflinePlayer> inviteList) {
+        List<String> uidList = new ArrayList<String>();
+
+        for (OfflinePlayer player : inviteList) {
+            uidList.add(player.getUniqueId().toString());
+        }
+        main.getPlayerDataConfig().set("parties." + partyName + ".invites", uidList);
+        main.savePlayerDataConfig();
+    }
+
+    private void setMembers(String partyName, List<OfflinePlayer> memberList) {
+        List<String> uidList = new ArrayList<String>();
+
+        for (OfflinePlayer player : memberList) {
+            uidList.add(player.getUniqueId().toString());
+        }
+        main.getPlayerDataConfig().set("parties." + partyName + ".members", uidList);
+        main.savePlayerDataConfig();
+    }
+
+
     // attempts to have a player invite another player into the party.
     public boolean invitePlayer(Player inviter, Player invited) {
         String partyName = getParty(inviter);
