@@ -47,6 +47,10 @@ messages:
     inviteReceived: "You were invited to join %s by %s! Type '/party join %s' to join."
     joinedParty: "%s has joined %s!"
     leftParty: "%s has left %s."
+    kickSuccess: "%s was kicked from the party."
+    youWereKicked: "You were kicked from the party."
+    inviteWithdrawSuccess: "%s's invitation was withdrawn."
+    yourInviteWasWithdrawn: "Your invitation to %s was withdrawn."
 errors:
   party:
     alreadyInParty: "You are already in a party! Type '/party leave' or '/party disband', first."
@@ -56,6 +60,7 @@ errors:
     partyDoesNotExist: "This party does not exist! It may have been disbanded."
     notInvited: "You have not been invited to this party."
     leaderCannotLeave: "You cannot leave this party as you are the leader! use '/party disband' instead."
+    memberNotFound: "Could not find a party member or invited player by this name."
   spells:
     outOfRange: "The target is out of range."
     notKnown: "You do not know this spell."
@@ -67,7 +72,7 @@ errors:
 
 mobsp: # how many soul points killing a monster gives
   default: 1337 # for entities with custom names not in this list
-  "my Custom Mob": 4
+  "my Custom Mob name": 4
   BAT: 1
   BLAZE: 2
   CAVE_SPIDER: 3

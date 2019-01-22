@@ -31,6 +31,7 @@ public class CommandParty implements CommandExecutor {
             sendPartyInfo(player);
             return true;
         }
+
         // /party info
         if (args[0].equalsIgnoreCase("info")) {
             sendPartyInfo(player);
@@ -84,10 +85,22 @@ public class CommandParty implements CommandExecutor {
             return true;
         }
 
+        // if a player decides to leave the party
         if (args[0].equalsIgnoreCase("leave")) {
             partyManager.removePlayer(player);
             return true;
         }
+
+        // if a player tries to kick another player from the party
+        // / party kick <player>
+        if (args[0].equalsIgnoreCase("remove")) {
+            String playerName = args[1];
+
+            partyManager.kickOfflinePlayer(player, playerName);
+            return true;
+        }
+
+
         sendPartyInstructions(player);
         return true;
     }
@@ -104,6 +117,7 @@ public class CommandParty implements CommandExecutor {
         player.sendMessage(ChatColor.BLUE + "/party invite <player>:" + ChatColor.WHITE + " Invites a player to the party.");
         player.sendMessage(ChatColor.BLUE + "/party join <name>:" + ChatColor.WHITE + " Join a party if you have been invited to it!.");
         player.sendMessage(ChatColor.BLUE + "/party leave:" + ChatColor.WHITE + " Leave the party you are currently in.");
+        player.sendMessage(ChatColor.BLUE + "/party remove <name>:" + ChatColor.WHITE + " Kicks a player from the party or revokes a player's invitation to the party. Only party leaders can use this command.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
     }
 

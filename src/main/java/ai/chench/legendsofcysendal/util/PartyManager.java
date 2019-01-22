@@ -258,7 +258,7 @@ public class PartyManager {
         return true;
     }
 
-    // immediately removes a player from the party if they are not the leader
+    // immediately removes an online player from the party if they are not the leader
     public boolean removePlayer(Player player) {
         String partyName = getParty(player);
 
@@ -281,7 +281,7 @@ public class PartyManager {
         setMembers(partyName, memberList);
 
         // set the player's party to nothing
-        main.getConfig().set("players." + player.getUniqueId().toString() + ".party", null);
+        main.getPlayerDataConfig().set("players." + player.getUniqueId().toString() + ".party", null);
 
         // tell the party that a player left.
         for (OfflinePlayer member : getMembers(partyName)) {
@@ -291,8 +291,66 @@ public class PartyManager {
         }
 
         // need to tell the player separately as they are no longer on the party list, so will not receive the previous message.
-        player.sendMessage(main.getConfig().getString("messages.party.leftParty"));
-
+        player.sendMessage(String.format(main.getConfig().getString("messages.party.leftParty"), player.getName(), partyName));
+        main.savePlayerDataConfig();
         return true;
+    }
+
+    // attempts to remove a player from the party if the kicker is the party leader.
+    // will work on offline players, as it will check a string against the party name
+    public boolean kickOfflinePlayer(Player kicker, String kicked) {
+        String partyName = getParty(kicker);
+        if (!isActive(partyName)) {
+            kicker.sendMessage(main.getConfig().getString("errors.party.notInParty"));
+            return false;
+        }
+
+        if (!kicker.equals(getLeader(partyName))) {
+            kicker.sendMessage(main.getConfig().getString("errors.party.notPartyLeader"));
+            return false;
+        }
+
+        List<OfflinePlayer> memberList = getMembers(partyName);
+
+        // check the member list for someone to kick
+        for (OfflinePlayer member : memberList) {
+            if (member.getName().equalsIgnoreCase(kicked)) {
+                // leader cannot kick themselves
+                if (kicker.equals(member)) {
+                    kicker.sendMessage(main.getConfig().getString("errors.party.leaderCannotLeave"));
+                    return false;
+                }
+
+                memberList.remove(member);
+                main.getPlayerDataConfig().set("players." + member.getUniqueId() + ".party", null);
+                main.savePlayerDataConfig();
+
+                kicker.sendMessage(String.format(main.getConfig().getString("messages.party.kickSuccess"), member.getName()));
+                if (member.isOnline()) {
+                    ((Player) member).sendMessage(String.format(main.getConfig().getString("messages.party.youWereKicked"), member.getName()));
+                }
+
+                setMembers(partyName, memberList);
+                return true;
+            }
+        }
+
+        List<OfflinePlayer> inviteList = getInviteList(partyName);
+        // check the member list for someone to kick
+        for (OfflinePlayer invited : inviteList) {
+            if (invited.getName().equalsIgnoreCase(kicked)) {
+                inviteList.remove(invited); // remove player from invite list
+                kicker.sendMessage(String.format(main.getConfig().getString("messages.party.inviteWithdrawSuccess"), invited.getName()));
+                if (invited.isOnline()) {
+                    ((Player) invited).sendMessage(String.format(main.getConfig().getString("messages.party.yourInviteWasWithdrawn"), partyName));
+                }
+
+                setInviteList(partyName, inviteList);
+                return true;
+            }
+        }
+
+        kicker.sendMessage(main.getConfig().getString("errors.party.memberNotFound"));
+        return false;
     }
 }
