@@ -1,6 +1,7 @@
 package ai.chench.legendsofcysendal.commands;
 
 import ai.chench.legendsofcysendal.Spell;
+import ai.chench.legendsofcysendal.util.RpgClass;
 import ai.chench.legendsofcysendal.util.RpgManager;
 import ai.chench.legendsofcysendal.util.SpellManager;
 import org.bukkit.ChatColor;
@@ -43,8 +44,12 @@ public class CommandSpell implements CommandExecutor {
 
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
         player.sendMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "SPELLS");
-        player.sendMessage(ChatColor.DARK_GRAY + "Type '/spell' followed by the spell name in square brackets to cast.");
+        player.sendMessage(ChatColor.DARK_GRAY + "Type '/spell' followed by the spell name to cast.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
+        if (rpgManager.getRpgClass(player) == RpgClass.NONE) {
+            player.sendMessage(ChatColor.BLUE + "You have not yet selected a class! Type '/loc reset' to choose a class.");
+        }
+
 
         for (Spell spell : spellManager.getClassSpells(rpgManager.getRpgClass(player))){
             if (spellManager.isKnownSpell(player, spell)){

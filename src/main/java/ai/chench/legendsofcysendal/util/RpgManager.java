@@ -49,8 +49,11 @@ public class RpgManager {
 
     // adds a number of soul points to the total a player has. Can be negative.
     public void addSoulPoints(Player player, int points) {
-        main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".sp", points + getSoulPoints(player));
-        main.savePlayerDataConfig();
+        // player can only gain soul points if they are in a class.
+        if (getRpgClass(player)!= RpgClass.NONE) {
+            main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".sp", points + getSoulPoints(player));
+            main.savePlayerDataConfig();
+        }
     }
 
     public int getLevel(Player player) {
