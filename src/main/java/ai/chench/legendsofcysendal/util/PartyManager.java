@@ -29,7 +29,7 @@ import java.util.UUID;
 
 public class PartyManager {
 
-    Main main;
+    private Main main;
     public PartyManager(Main main) {
         this.main = main;
     }
@@ -195,9 +195,7 @@ public class PartyManager {
         for (OfflinePlayer member : memberList) {
 
             if (member.isOnline()) {
-                Player onlineMember = (Player) member;
-
-                onlineMember.sendMessage(String.format(main.getConfig().getString("messages.party.joinedParty"), partyName));
+                ((Player) member).sendMessage(String.format(main.getConfig().getString("messages.party.joinedParty"), invited.getName(),partyName));
             }
         }
         main.savePlayerDataConfig();
@@ -224,7 +222,6 @@ public class PartyManager {
         main.getPlayerDataConfig().set("parties." + partyName + ".members", uidList);
         main.savePlayerDataConfig();
     }
-
 
     // attempts to have a player invite another player into the party.
     public boolean invitePlayer(Player inviter, Player invited) {
@@ -257,6 +254,44 @@ public class PartyManager {
 
         inviter.sendMessage(String.format(main.getConfig().getString("messages.party.inviteSent"), invited.getDisplayName()));
         invited.sendMessage(String.format(main.getConfig().getString("messages.party.inviteReceived"), partyName, inviter.getDisplayName(), partyName));
+
+        return true;
+    }
+
+    // immediately removes a player from the party if they are not the leader
+    public boolean removePlayer(Player player) {
+        String partyName = getParty(player);
+
+        // check if player is in party
+        if (!isActive(partyName)) {
+            player.sendMessage(main.getConfig().getString("errors.party.notInParty"));
+            return false;
+        }
+
+        // check if player is the leader of the party
+        // the leader of the party cannot leave—only disband the party.
+        if (player.equals(getLeader(partyName))) {
+            player.sendMessage(main.getConfig().getString("errors.party.leaderCannotLeave"));
+            return false;
+        }
+
+        // update the list of members
+        List<OfflinePlayer> memberList = getMembers(partyName);
+        memberList.remove(player);
+        setMembers(partyName, memberList);
+
+        // set the player's party to nothing
+        main.getConfig().set("players." + player.getUniqueId().toString() + ".party", null);
+
+        // tell the party that a player left.
+        for (OfflinePlayer member : getMembers(partyName)) {
+            if (member.isOnline()) {
+                ((Player) member).sendMessage(String.format(main.getConfig().getString("messages.party.leftParty"), player.getName(), partyName));
+            }
+        }
+
+        // need to tell the player separately as they are no longer on the party list, so will not receive the previous message.
+        player.sendMessage(main.getConfig().getString("messages.party.leftParty"));
 
         return true;
     }

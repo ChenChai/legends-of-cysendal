@@ -84,6 +84,10 @@ public class CommandParty implements CommandExecutor {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("leave")) {
+            partyManager.removePlayer(player);
+            return true;
+        }
         sendPartyInstructions(player);
         return true;
     }
@@ -99,6 +103,7 @@ public class CommandParty implements CommandExecutor {
         player.sendMessage(ChatColor.BLUE + "/party info:" + ChatColor.WHITE + " Displays information about your party.");
         player.sendMessage(ChatColor.BLUE + "/party invite <player>:" + ChatColor.WHITE + " Invites a player to the party.");
         player.sendMessage(ChatColor.BLUE + "/party join <name>:" + ChatColor.WHITE + " Join a party if you have been invited to it!.");
+        player.sendMessage(ChatColor.BLUE + "/party leave:" + ChatColor.WHITE + " Leave the party you are currently in.");
         player.sendMessage(ChatColor.DARK_GRAY + "=====================");
     }
 
