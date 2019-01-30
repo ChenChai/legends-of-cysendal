@@ -41,9 +41,9 @@ public class KillListener implements Listener {
                 PartyManager partyManager = new PartyManager(plugin);
 
                 // if players are in the same party, cancel the damage.
-                if (partyManager.getParty(damagingPlayer).equals(partyManager.getParty(damagedPlayer))) {
+                if (!(partyManager.getParty(damagingPlayer) == null || partyManager.getParty(damagedPlayer) == null) &&
+                partyManager.getParty(damagingPlayer).equals(partyManager.getParty(damagedPlayer))) {
                     event.setCancelled(true);
-                    Bukkit.broadcastMessage("Damage Cancelled!");
                 }
             }
 
@@ -51,9 +51,6 @@ public class KillListener implements Listener {
             DamageManager damageManager = new DamageManager(plugin);
             damageManager.addDamageContribution(damagingPlayer, entity, event.getFinalDamage());
         }
-
-
-
 
     }
 

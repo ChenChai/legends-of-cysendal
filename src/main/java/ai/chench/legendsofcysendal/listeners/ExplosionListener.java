@@ -1,8 +1,11 @@
 package ai.chench.legendsofcysendal.listeners;
 
+import ai.chench.legendsofcysendal.Main;
 import ai.chench.legendsofcysendal.util.DamageManager;
+import ai.chench.legendsofcysendal.util.PartyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.data.type.Bed;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,11 +16,11 @@ import org.bukkit.plugin.Plugin;
 
 public class ExplosionListener implements Listener {
 
-    private Plugin plugin;
+    private Main plugin;
     private Player explosionOwner = null;
     private float maxDamage;
 
-    public ExplosionListener(Plugin plugin) { this.plugin = plugin; }
+    public ExplosionListener(Main plugin) { this.plugin = plugin; }
 
     // returns false if explosion was cancelled, true otherwise.
     // creates an explosion that effectively has an owner, in the world the owner is in.
@@ -56,7 +59,24 @@ public class ExplosionListener implements Listener {
         // lower max damage an entity can take to
         event.setDamage(Math.min(event.getDamage(), maxDamage));
 
-        Player owner = explosionOwner;
+        // the owner can't damage themselves with their own explosion.
+        if (explosionOwner.equals(entity)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        // if the entity damaged was a player, check if they are in the same party and cancel the damage if they are.
+        if (event.getEntity() instanceof  Player) {
+            Player damaged = (Player) event.getEntity();
+
+            PartyManager partyManager = new PartyManager(plugin);
+            // if both parties are not null and both parties are the same
+            if (!(partyManager.getParty(explosionOwner) == null || partyManager.getParty(damaged) == null) &&
+            partyManager.getParty(explosionOwner).equals(partyManager.getParty(damaged))) {
+                event.setCancelled(true);
+            }
+
+        }
 
         // add damage as player's damage contribution.
         DamageManager damageManager = new DamageManager(plugin);
