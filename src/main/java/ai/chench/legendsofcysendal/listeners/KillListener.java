@@ -1,10 +1,14 @@
 package ai.chench.legendsofcysendal.listeners;
 
+import ai.chench.legendsofcysendal.Main;
 import ai.chench.legendsofcysendal.util.DamageManager;
+import ai.chench.legendsofcysendal.util.PartyManager;
+import ai.chench.legendsofcysendal.util.RpgClass;
 import ai.chench.legendsofcysendal.util.RpgManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.block.data.type.Bed;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -17,8 +21,8 @@ import org.bukkit.plugin.Plugin;
 
 // This listener handles the death of mobs, and awards soul points accordingly.
 public class KillListener implements Listener {
-    private Plugin plugin;
-    public KillListener(Plugin plugin){ this.plugin = plugin; }
+    private Main plugin;
+    public KillListener(Main plugin){ this.plugin = plugin; }
 
     // register players as damage contributors when they damage entities
     // count up the total damage they have done.
@@ -29,11 +33,28 @@ public class KillListener implements Listener {
         Damageable entity = (Damageable) event.getEntity();
 
         if (event.getDamager() instanceof Player) {
-            Player player = (Player) event.getDamager();
+            Player damagingPlayer = (Player) event.getDamager();
+
+            // if the damage was caused by a player attacking another player, check if the players are in the same party.
+            if (event.getEntity() instanceof Player) {
+                Player damagedPlayer = (Player) event.getEntity();
+                PartyManager partyManager = new PartyManager(plugin);
+
+                // if players are in the same party, cancel the damage.
+                if (partyManager.getParty(damagingPlayer).equals(partyManager.getParty(damagedPlayer))) {
+                    event.setCancelled(true);
+                    Bukkit.broadcastMessage("Damage Cancelled!");
+                }
+            }
+
             Bukkit.broadcastMessage(entity.getName() + " took " + event.getFinalDamage());
             DamageManager damageManager = new DamageManager(plugin);
-            damageManager.addDamageContribution(player, entity, event.getFinalDamage());
+            damageManager.addDamageContribution(damagingPlayer, entity, event.getFinalDamage());
         }
+
+
+
+
     }
 
     @EventHandler
@@ -47,16 +68,20 @@ public class KillListener implements Listener {
                 if (damageContribution > 0) {
                     player.sendMessage("You did " + String.format("%.1f" ,damageContribution) + " damage to " + entity.getName());
 
-                    // award soul points for kill
-                    RpgManager rpgManager = new RpgManager(plugin);
-                    int points = rpgManager.getEntitySoulPointValue(entity);
-                    rpgManager.addSoulPoints(player, points);
+                    // award soul points for kill only if player has a class
 
-                    // display message telling player how many points they gained
-                    player.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "+" + points + ChatColor.RESET + "" + ChatColor.DARK_GRAY + " Soul Points ["
-                            + (entity.getCustomName() == null ? entity.getName() : entity.getCustomName()) // display custom name if it exists; normal name otherwise
-                            + "]");
-                    rpgManager.updateLevel(player);
+                    RpgManager rpgManager = new RpgManager(plugin);
+                    if (rpgManager.getRpgClass(player) != RpgClass.NONE) {
+
+                        int points = rpgManager.getEntitySoulPointValue(entity);
+                        rpgManager.addSoulPoints(player, points);
+
+                        // display message telling player how many points they gained
+                        player.sendMessage(ChatColor.DARK_AQUA + "" + ChatColor.BOLD + "+" + points + ChatColor.RESET + "" + ChatColor.DARK_GRAY + " Soul Points ["
+                                + (entity.getCustomName() == null ? entity.getName() : entity.getCustomName()) // display custom name if it exists; normal name otherwise
+                                + "]");
+                        rpgManager.updateLevel(player);
+                    }
                 }
             }
         }
