@@ -38,8 +38,8 @@ public class UserInterfaceListener implements Listener {
 
         // check if player is registered in config.yml
         // getConfig().isBoolean will return false if the path does not exist because it is the player's first time joining.
-        if (!main.getPlayerDataConfig().isBoolean("players." + uniqueId + ".firstJoin") || main.getPlayerDataConfig().getBoolean("players." + uniqueId + ".firstJoin")) {
-            RpgManager rpgManager = new RpgManager(plugin);
+        RpgManager rpgManager = new RpgManager(plugin);
+        if (rpgManager.isFirstJoin(player)) {
             rpgManager.resetPlayer(player);
         }
     }
@@ -83,7 +83,8 @@ public class UserInterfaceListener implements Listener {
 
                     if (rpgClassItemName != null && itemName != null && rpgClassItemName.equals(itemName)) {
                         rpgManager.setRpgClass(player, rpgClass);
-                        player.sendMessage("You are now a " + rpgClass.toString());
+                        rpgManager.setFirstJoin(player, false); // they are now a class
+                        player.sendMessage(String.format(plugin.getConfig().getString("messages.classChosen"), rpgClass.toString()));
                         player.closeInventory();
                         rpgManager.updateLevel(player); // save the level update for until the player has chosen a class, so they see what spells they learn.
                     }

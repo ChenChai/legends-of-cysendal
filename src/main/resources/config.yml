@@ -30,7 +30,7 @@ spells: # cooldown and duration are in ticks. 20 ticks = 1 second. Mandatory fie
     level: 1
     displayName: "Explode"
     lore: "You make an explosion surrounding yourself."
-    costItemNum: 2
+    costItemNum: 10
     costItemType: "FEATHER"
     cooldown: 100
     explosionPower: 4.0
@@ -40,6 +40,7 @@ spells: # cooldown and duration are in ticks. 20 ticks = 1 second. Mandatory fie
 messages:
   learnedSpell: "§6You learned a new spell, %s! Type '/spell' to check it out!"
   levelUp: "§6§LYou have levelled up to level %d!"
+  classChosen: "You are now a %s. Type '/loc' for more info!"
   party:
     partyCreated: "Your party has been created!"
     partyDisbanded: "The party was successfully disbanded."
@@ -71,66 +72,66 @@ errors:
   playerNotOnline: "This player is not online or does not exist."
 
 mobsp: # how many soul points killing a monster gives
-  default: 1337 # for entities with custom names not in this list
+  default: 80 # for entities with custom names not in this list
   "my Custom Mob name": 4
-  BAT: 1
-  BLAZE: 2
-  CAVE_SPIDER: 3
+  BAT: 5
+  BLAZE: 5
+  CAVE_SPIDER: 5
   CHICKEN: 5
   COD: 1
   COW: 1
-  CREEPER: 1
+  CREEPER: 5
   DOLPHIN: 1
   DONKEY: 1
-  DROWNED: 1
+  DROWNED: 5
   ELDER_GUARDIAN: 100
-  ENDER_DRAGON: 244
-  ENDERMAN: 4
-  ENDERMITE: 24
-  EVOKER: 34
-  GHAST: 23
-  GIANT: 24
-  GUARDIAN: 35
-  HORSE: 53
-  HUSK: 35
-  ILLUSIONER: 35
-  IRON_GOLEM: 356
-  LLAMA: 35
-  MAGMA_CUBE: 35
+  ENDER_DRAGON: 200
+  ENDERMAN: 5
+  ENDERMITE: 5
+  EVOKER: 10
+  GHAST: 10
+  GIANT: 20
+  GUARDIAN: 10
+  HORSE: 1
+  HUSK: 5
+  ILLUSIONER: 5
+  IRON_GOLEM: 5
+  LLAMA: 1
+  MAGMA_CUBE: 3
   MULE: 1
-  MUSHROOM_COW: 35
-  OCELOT: 535
-  PARROT: 35
-  PHANTOM: 35
-  PIG: 353
-  PIG_ZOMBIE: 353
-  POLAR_BEAR: 353
-  PUFFERFISH: 353
+  MUSHROOM_COW: 1
+  OCELOT: 1
+  PARROT: 1
+  PHANTOM: 5
+  PIG: 1
+  PIG_ZOMBIE: 5
+  POLAR_BEAR: 1
+  PUFFERFISH: 1
   RABBIT: 1
   SALMON: 1
   SHEEP: 1
-  SHULKER: 1
+  SHULKER: 5
   SHULKER_BULLET: 0
   SILVERFISH: 1
-  SKELETON: 14
-  SKELETON_HORSE: 4
-  SLIME: 2
-  SNOWMAN: 35
-  SPIDER: 3
+  SKELETON: 5
+  SKELETON_HORSE: 5
+  SLIME: 3
+  SNOWMAN: 1
+  SPIDER: 5
   SQUID: 1
-  STRAY: 25 # What is this?
+  STRAY: 5
   TROPICAL_FISH: 1
   TURTLE: 1
-  VEX: 2
+  VEX: 5
   VILLAGER: 1
-  VINDICATOR: 35
-  WITCH: 24
-  WITHER: 245
-  WITHER_SKELETON: 24
-  WOLF: 24
-  ZOMBIE: 24
+  VINDICATOR: 10
+  WITCH: 5
+  WITHER: 200
+  WITHER_SKELETON: 10
+  WOLF: 5
+  ZOMBIE: 5
   ZOMBIE_HORSE: 5
-  ZOMBIE_VILLAGER: 24
+  ZOMBIE_VILLAGER: 5
 
 lore:
   intro:

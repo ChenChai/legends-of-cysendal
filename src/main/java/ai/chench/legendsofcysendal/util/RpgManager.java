@@ -123,13 +123,7 @@ public class RpgManager {
         main.savePlayerDataConfig();
     }
     public boolean isFirstJoin(Player player) {
-        if (!plugin.getConfig().isBoolean("players." + player.getUniqueId() + ".firstJoin")) {
-            plugin.getLogger().severe("Player " + player.getDisplayName() + " " +
-                    "has invalid value for firstJoin in config.yml!");
-            return false;
-        }
-
-        return main.getPlayerDataConfig().getBoolean("players." + player.getUniqueId() + ".firstJoin");
+        return main.getPlayerDataConfig().getBoolean("players." + player.getUniqueId() + ".firstJoin", true);
     }
     public void setFirstJoin(Player player, boolean firstJoin) {
         main.getPlayerDataConfig().set("players." + player.getUniqueId() + ".firstJoin", firstJoin);
@@ -160,7 +154,7 @@ public class RpgManager {
         RpgManager rpgManager = new RpgManager(plugin);
         rpgManager.setSoulPoints(player, 0);
         rpgManager.setRpgClass(player, RpgClass.NONE);
-        rpgManager.setFirstJoin(player, true);
+        rpgManager.setFirstJoin(player, true); // don't change their first join status until they actually select their class.
 
         openClassSelect(player);
     }
